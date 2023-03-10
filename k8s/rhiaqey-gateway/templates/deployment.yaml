@@ -1,0 +1,106 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "rhiaqey-gateway.fullname" . }}
+  labels:
+    {{- include "rhiaqey-gateway.labels" . | nindent 4 }}
+spec:
+  {{- if not .Values.autoscaling.enabled }}
+  replicas: {{ .Values.replicaCount }}
+  {{- end }}
+  selector:
+    matchLabels:
+      {{- include "rhiaqey-gateway.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      {{- with .Values.podAnnotations }}
+      annotations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      labels:
+        {{- include "rhiaqey-gateway.selectorLabels" . | nindent 8 }}
+    spec:
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              {{- include "rhiaqey-gateway.selectorLabels" . | nindent 6 }}
+      {{- with .Values.imagePullSecrets }}
+      imagePullSecrets:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      serviceAccountName: {{ include "rhiaqey-gateway.serviceAccountName" . }}
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: {{ .Chart.Name }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http-private
+              containerPort: {{ .Values.gateway.private_port }}
+              protocol: TCP
+            - name: http-public
+              containerPort: {{ .Values.gateway.public_port }}
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /alive
+              port: http-private
+            initialDelaySeconds: 15
+            periodSeconds: 30
+            timeoutSeconds: 15
+          readinessProbe:
+            httpGet:
+              path: /alive
+              port: http-private
+            initialDelaySeconds: 15
+            periodSeconds: 30
+            timeoutSeconds: 15
+          env:
+            - name: ID
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.name
+            - name: NAME
+              value: {{ .Release.Name | quote }}
+            - name: NAMESPACE
+              valueFrom:
+                fieldRef:
+                  fieldPath: metadata.namespace
+            - name: PUBLIC_PORT
+              value: {{ .Values.gateway.public_port | quote }}
+            - name: PRIVATE_PORT
+              value: {{ .Values.gateway.private_port | quote }}
+            - name: RUST_LOG
+              value: {{ .Values.gateway.log_level | quote }}
+            {{ if .Values.gateway.redis.sentinel_mode }}
+            - name: REDIS_SENTINEL_ADDRESSES
+              value: {{ .Values.gateway.redis.sentinel_addresses | quote }}
+            {{ else }}
+            - name: REDIS_ADDRESS
+              value: {{ .Values.gateway.redis.address | quote }}
+            {{ end }}
+            - name: REDIS_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: "redis"
+                  key: "redis-password"
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

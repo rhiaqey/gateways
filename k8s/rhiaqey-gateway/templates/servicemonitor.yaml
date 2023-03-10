@@ -1,0 +1,14 @@
+{{- if .Values.metrics.serviceMonitor.enabled -}}
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: {{ include "rhiaqey-gateway.fullname" . }}
+  labels:
+    {{- include "rhiaqey-gateway.labels" . | nindent 4 }}
+spec:
+  selector:
+    matchLabels:
+      {{- include "rhiaqey-gateway.labels" . | nindent 6 }}
+  endpoints:
+    - port: http-private
+{{- end -}}

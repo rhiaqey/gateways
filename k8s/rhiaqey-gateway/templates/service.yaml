@@ -1,0 +1,15 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "rhiaqey-gateway.fullname" . }}
+  labels:
+    {{- include "rhiaqey-gateway.labels" . | nindent 4 }}
+spec:
+  type: {{ .Values.service.type }}
+  ports:
+    - port: {{ .Values.service.port }}
+      targetPort: http-private
+      protocol: TCP
+      name: http-private
+  selector:
+    {{- include "rhiaqey-gateway.selectorLabels" . | nindent 4 }}
