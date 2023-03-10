@@ -1,0 +1,17 @@
+[package]
+name = "gateways"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+rhiaqey-sdk = { git = "https://github.com/rhiaqey/sdk.git" }
+rhiaqey-common = { git = "https://github.com/rhiaqey/common.git" }
+env_logger = "0.10"
+log = "0.4"
+lazy_static = { version = "1.4" }
+
+[[bin]]
+name = "websocket"
+src = "src/bin/websocket.rs"
