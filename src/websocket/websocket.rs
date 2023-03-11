@@ -8,6 +8,7 @@ use axum::{headers, Router, TypedHeader};
 use axum::routing::get;
 use futures::StreamExt;
 use headers_client_ip::XRealIP;
+use hyper::StatusCode;
 use lazy_static::lazy_static;
 use log::{debug, info, warn};
 use prometheus::{Gauge, register_gauge};
@@ -55,6 +56,30 @@ pub struct Params {
     //
 }
 
+fn user_ip_allowed(
+    ip: Option<TypedHeader<XRealIP>>,
+    allowed_ips: Vec<String>,
+) -> bool {
+    if cfg!(debug_assertions) {
+        return true
+    }
+
+    let Some(ip) = ip else {
+        warn!("user ip was not found in headers");
+        return false;
+    };
+
+    let Some(found) = allowed_ips.into_iter().
+        find(|allowed_ip| allowed_ip.eq(&ip.to_string())) else {
+        warn!("user ip {:?} is not allowed", ip);
+        return false;
+    };
+
+    debug!("user ip {:?} is allowed", found);
+
+    true
+}
+
 /// The handler for the HTTP request (this gets called when the HTTP GET lands at the start
 /// of websocket negotiation). After this completes, the actual switching from HTTP to
 /// websocket protocol will occur.
@@ -62,7 +87,7 @@ pub struct Params {
 /// as well as things from HTTP headers such as user-agent of the browser etc.
 async fn ws_handler(
     ws: WebSocketUpgrade,
-    _ip: Option<TypedHeader<XRealIP>>,
+    ip: Option<TypedHeader<XRealIP>>,
     user_agent: Option<TypedHeader<headers::UserAgent>>,
     ConnectInfo(addr): ConnectInfo<SocketAddr>,
     state: Arc<WebSocketState>,
@@ -79,7 +104,11 @@ async fn ws_handler(
 
     let statx = state.clone();
     let settings = statx.settings.lock().await;
-    debug!("whitelisted ips {:?}", settings.whitelisted_ips);
+    let whitelisted_ips = settings.whitelisted_ips.clone();
+
+    if !user_ip_allowed(ip, whitelisted_ips) {
+        return (StatusCode::UNAUTHORIZED, "Unauthorized access".to_string()).into_response();
+    }
 
     // finalize the upgrade process by returning upgrade callback.
     // we can customize the callback by sending additional info such as address.
