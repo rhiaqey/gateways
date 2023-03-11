@@ -9,7 +9,7 @@ use rhiaqey_common::executor::Executor;
 use rhiaqey_common::pubsub::RPCMessageData;
 use serde::de::DeserializeOwned;
 use std::fmt::Debug;
-use rhiaqey_sdk::gateway::Gateway;
+use rhiaqey_sdk::gateway::{Gateway, GatewayConfig};
 
 use crate::exe::metrics::TOTAL_CHANNELS;
 
@@ -42,7 +42,12 @@ pub async fn run<
         info!("setting retrieved successfully")
     }
 
-    let mut publisher_stream = match plugin.setup(settings) {
+    let config = GatewayConfig {
+        port: executor.get_public_port(),
+        host: None,
+    };
+
+    let mut publisher_stream = match plugin.setup(config, settings) {
         Err(error) => {
             panic!("failed to setup gateway: {error}");
         }
