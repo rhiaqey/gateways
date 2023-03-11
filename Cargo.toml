@@ -1,5 +1,5 @@
 [package]
-name = "gateways"
+name = "rhiaqey-gateways"
 version = "0.1.0"
 edition = "2021"
 
@@ -8,10 +8,25 @@ edition = "2021"
 [dependencies]
 rhiaqey-sdk = { git = "https://github.com/rhiaqey/sdk.git" }
 rhiaqey-common = { git = "https://github.com/rhiaqey/common.git" }
+serde = { version = "1.0", features = [ "derive" ]}
+serde_json = "1.0"
 env_logger = "0.10"
 log = "0.4"
+prometheus = { version = "0.13", features = [ "process" ] }
+async-trait = "0.1"
+futures = "0.3"
 lazy_static = { version = "1.4" }
+rustis = { version = "0.8", features = [ "redis-json", "tokio-runtime" ] }
+tokio = { version = "1.21", features = [ "full", "rt", "rt-multi-thread" ] }
+axum = { version = "0.6" }
+hyper = { version = "0.14", features = [ "full" ] }
+tower = { version = "0.4" }
+headers-client-ip = { version = "0.1.0", optional = true }
+
+[features]
+websocket = [ "dep:headers-client-ip" ]
 
 [[bin]]
 name = "websocket"
 src = "src/bin/websocket.rs"
+required-features = [ "websocket" ]

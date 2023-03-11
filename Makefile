@@ -28,7 +28,7 @@ export CHANNELS
 ws1:
 	ID=ws1 \
 	NAME=ws-1 \
-		cargo +nightly run --bin websocket
+		cargo +nightly run --bin websocket --features=websocket
 
 .PHONY: build
 build:
