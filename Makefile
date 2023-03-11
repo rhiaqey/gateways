@@ -5,8 +5,8 @@ export REDIS_PASSWORD=7tgbBSO2Yu
 #export REDIS_SENTINEL_MASTER=mymaster
 export REDIS_ADDRESS=localhost:6379
 export REDIS_SENTINEL_ADDRESSES=localhost:26379
-export PRIVATE_PORT=3003
-export PUBLIC_PORT=3004
+export PRIVATE_PORT=3010
+export PUBLIC_PORT=3011
 export NAMESPACE=rhiaqey
 
 define CHANNELS

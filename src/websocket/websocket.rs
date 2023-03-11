@@ -2,13 +2,14 @@ use std::net::{IpAddr, SocketAddr};
 use std::sync::Arc;
 use async_trait::async_trait;
 use axum::extract::ws::{Message, WebSocket as WebSocketConn};
-use axum::extract::{ConnectInfo, Query, State, WebSocketUpgrade};
-use axum::response::{IntoResponse, Response};
-use axum::{Extension, headers, Router, TypedHeader};
+use axum::extract::{ConnectInfo, WebSocketUpgrade};
+use axum::response::{IntoResponse};
+use axum::{headers, Router, TypedHeader};
 use axum::routing::get;
+use futures::StreamExt;
 use headers_client_ip::XRealIP;
 use lazy_static::lazy_static;
-use log::{debug, info};
+use log::{debug, info, warn};
 use prometheus::{Gauge, register_gauge};
 use rhiaqey_sdk::gateway::{Gateway, GatewayConfig, GatewayMessage, GatewayMessageReceiver};
 use tokio::sync::mpsc::{unbounded_channel, UnboundedSender};
@@ -61,10 +62,10 @@ pub struct Params {
 /// as well as things from HTTP headers such as user-agent of the browser etc.
 async fn ws_handler(
     ws: WebSocketUpgrade,
-    ip: Option<TypedHeader<XRealIP>>,
+    _ip: Option<TypedHeader<XRealIP>>,
     user_agent: Option<TypedHeader<headers::UserAgent>>,
     ConnectInfo(addr): ConnectInfo<SocketAddr>,
-    shared_state: Arc<Mutex<WebSocketState>>,
+    state: Arc<WebSocketState>,
 ) -> impl IntoResponse {
     info!("[GET] Handle websocket connection");
 
@@ -76,13 +77,17 @@ async fn ws_handler(
 
     debug!("`{}` at {} connected.", user_agent, addr.to_string());
 
+    let statx = state.clone();
+    let settings = statx.settings.lock().await;
+    debug!("whitelisted ips {:?}", settings.whitelisted_ips);
+
     // finalize the upgrade process by returning upgrade callback.
     // we can customize the callback by sending additional info such as address.
     ws.on_upgrade(move |socket| {
         handle_ws_connection(
             socket,
             addr,
-            // state,
+            state
         )
     })
 }
@@ -91,9 +96,59 @@ async fn ws_handler(
 async fn handle_ws_connection(
     socket: WebSocketConn,
     who: SocketAddr,
-    // state: Arc<WebSocketState>,
+    state: Arc<WebSocketState>,
 ) {
-    todo!();
+    let sender = state.sender.clone().unwrap();
+    let (_, mut receiver) = socket.split();
+
+    tokio::task::spawn(async move {
+        'outer: while let Some(Ok(msg)) = receiver.next().await {
+            debug!("received message {:?}", msg);
+
+            match msg {
+                Message::Ping(_) => {
+                    // handled automatically by axum
+                }
+                Message::Pong(_) => {
+                    // handled automatically by axum
+                }
+                Message::Text(txt) => {
+                    match serde_json::from_str::<GatewayMessage>(txt.as_str()) {
+                        Ok(gateway_message) => {
+                            debug!("gateway message arrived (text)");
+                            sender.send(gateway_message).expect("could not send gateway message upstream");
+                        }
+                        Err(error) => warn!("error parsing gateway message {error}")
+                    }
+                }
+                Message::Binary(raw) => {
+                    match serde_json::from_slice::<GatewayMessage>(raw.as_slice()) {
+                        Ok(gateway_message) => {
+                            debug!("gateway message arrived (text)");
+                            sender.send(gateway_message).expect("could not send gateway message upstream");
+                        }
+                        Err(error) => warn!("error parsing gateway message {error}")
+                    }
+                }
+                Message::Close(c) => {
+                    if let Some(cf) = c {
+                        warn!(
+                            "{} sent close with code {} and reason `{}`",
+                            who, cf.code, cf.reason
+                        );
+                    } else {
+                        warn!("{} somehow sent close message without CloseFrame", who);
+                    }
+
+                    TOTAL_CONNECTIONS.dec();
+
+                    break 'outer;
+                }
+            }
+        }
+    });
+
+    TOTAL_CONNECTIONS.inc();
 }
 
 #[async_trait]
@@ -129,17 +184,16 @@ impl Gateway<WebSocketSettings> for WebSocket {
 
         tokio::task::spawn(async move {
             let config = config.lock().await;
-            let setx = Arc::clone(&settings);
-            let settings = settings.lock().await;
+            let settings = Arc::clone(&settings);
             let host = config.host.clone().unwrap_or(String::from("0.0.0.0"));
             let sadr = SocketAddr::from((host.parse::<IpAddr>().unwrap(), config.port));
 
             debug!("running websocket on address {}", sadr);
 
-            let shared_state = Arc::new(Mutex::new(WebSocketState{
+            let shared_state = Arc::new(WebSocketState{
                 sender: Some(sender),
-                settings: setx,
-            }));
+                settings,
+            });
 
             let app = Router::new().
                 route("/ws", get({
