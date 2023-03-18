@@ -127,6 +127,8 @@ async fn handle_ws_connection(
     who: SocketAddr,
     state: Arc<WebSocketState>,
 ) {
+    info!("starting {}", self.kind());
+
     let sender = state.sender.clone().unwrap();
     let (_, mut receiver) = socket.split();
 

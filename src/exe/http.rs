@@ -1,7 +1,7 @@
 use axum::routing::get;
 use axum::Router;
 use axum::{http::StatusCode, response::IntoResponse};
-use log::info;
+use log::{debug, info};
 use prometheus::{Encoder, TextEncoder};
 
 async fn get_ready() -> impl IntoResponse {
@@ -28,13 +28,15 @@ async fn get_version() -> &'static str {
 }
 
 pub async fn start_private_http_server(port: u16) -> hyper::Result<()> {
+    info!("starting http server @ port {}", port);
+
     let app = Router::new()
         .route("/alive", get(get_ready))
         .route("/ready", get(get_ready))
         .route("/metrics", get(get_metrics))
         .route("/version", get(get_version));
 
-    info!("running http server @ port {}", port);
+    debug!("running http server @ port {}", port);
 
     axum::Server::bind(&format!("0.0.0.0:{}", port).parse().unwrap())
         .serve(app.into_make_service())
