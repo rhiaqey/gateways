@@ -111,7 +111,7 @@ async fn ws_handler(
     let whitelisted_ips = settings.whitelisted_ips.clone();
 
     if !user_ip_allowed(ip, whitelisted_ips) {
-        return (StatusCode::UNAUTHORIZED, "Unauthorized access".to_string()).into_response();
+        return (StatusCode::FORBIDDEN, "Unauthorized access".to_string()).into_response();
     }
 
     // finalize the upgrade process by returning upgrade callback.
