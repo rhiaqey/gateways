@@ -80,6 +80,10 @@ fn user_ip_allowed(
     true
 }
 
+async fn get_home() -> impl IntoResponse {
+    (StatusCode::OK, "OK")
+}
+
 /// The handler for the HTTP request (this gets called when the HTTP GET lands at the start
 /// of websocket negotiation). After this completes, the actual switching from HTTP to
 /// websocket protocol will occur.
@@ -227,6 +231,7 @@ impl Gateway<WebSocketSettings> for WebSocket {
             });
 
             let app = Router::new().
+                route("/", get(get_home)).
                 route("/ws", get({
                     let shared_state = Arc::clone(&shared_state);
                     move |ip, ws, user_agent, info| {
