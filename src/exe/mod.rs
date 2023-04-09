@@ -59,6 +59,8 @@ pub async fn run<
     tokio::spawn(start_private_http_server(port));
 
     let mut pubsub_stream = executor.create_hub_to_publishers_pubsub().await.unwrap();
+    let channel_count = executor.get_channel_count().await as f64;
+    TOTAL_CHANNELS.set(channel_count);
 
     debug!("stream is ready");
 
