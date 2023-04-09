@@ -89,7 +89,7 @@ metrics:
 gateway:
   private_port: 4001
   public_port: 4002
-  log_level: "info"
+  log_level: "rhiaqey=debug"
   redis:
     sentinel_mode: false
     address: "redis:6379"
