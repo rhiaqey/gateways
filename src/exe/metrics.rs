@@ -3,7 +3,7 @@ use prometheus::{register_gauge, Gauge};
 
 lazy_static! {
     pub static ref TOTAL_CHANNELS: Gauge = register_gauge!(
-        "total_channels",
+        "total_gateway_channels",
         "Total number of active channels.",
     )
     .expect("cannot create gauge metric for channels");
