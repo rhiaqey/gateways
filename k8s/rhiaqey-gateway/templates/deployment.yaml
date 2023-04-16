@@ -81,6 +81,16 @@ spec:
               value: {{ .Values.gateway.public_port | quote }}
             - name: PRIVATE_PORT
               value: {{ .Values.gateway.private_port | quote }}
+            - name: PRIVATE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.gateway.keys.name }}
+                  key: {{ .Values.gateway.keys.private }}
+            - name: PUBLIC_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.gateway.keys.name }}
+                  key: {{ .Values.gateway.keys.public }}
             - name: RUST_LOG
               value: {{ .Values.gateway.log_level | quote }}
             {{ if .Values.gateway.redis.sentinel_mode }}

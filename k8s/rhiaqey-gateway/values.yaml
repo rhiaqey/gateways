@@ -90,6 +90,10 @@ gateway:
   private_port: 4001
   public_port: 4002
   log_level: "rhiaqey=debug"
+  keys:
+    name: "rhiaqey-keys"
+    private: "private_key"
+    public: "public_key"
   redis:
     sentinel_mode: false
     address: "redis:6379"
