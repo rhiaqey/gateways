@@ -3,12 +3,11 @@ use std::sync::Arc;
 use async_trait::async_trait;
 use axum::extract::ws::{Message, WebSocket as WebSocketConn};
 use axum::extract::{ConnectInfo, WebSocketUpgrade};
-use axum::response::{IntoResponse};
+use axum::response::IntoResponse;
 use axum::{headers, Router, TypedHeader};
-use axum::http::StatusCode;
+use axum::http::{HeaderMap, StatusCode};
 use axum::routing::get;
 use futures::StreamExt;
-use headers_client_ip::XRealIP;
 use lazy_static::lazy_static;
 use log::{debug, info, warn};
 use prometheus::{Gauge, register_gauge};
@@ -51,26 +50,20 @@ pub struct WebSocketState {
     settings: Arc<Mutex<WebSocketSettings>>,
 }
 
-#[derive(Deserialize)]
-pub struct Params {
-    //
+async fn get_home() -> impl IntoResponse {
+    (StatusCode::OK, "OK")
 }
 
 fn user_ip_allowed(
-    ip: Option<TypedHeader<XRealIP>>,
+    ip: String,
     allowed_ips: Vec<String>,
 ) -> bool {
     if cfg!(debug_assertions) {
         return true
     }
 
-    let Some(ip) = ip else {
-        warn!("user ip was not found in headers");
-        return false;
-    };
-
     let Some(found) = allowed_ips.into_iter().
-        find(|allowed_ip| allowed_ip.eq(&ip.to_string())) else {
+        find(|allowed_ip| allowed_ip.eq(&ip)) else {
         warn!("user ip {:?} is not allowed", ip);
         return false;
     };
@@ -80,8 +73,32 @@ fn user_ip_allowed(
     true
 }
 
-async fn get_home() -> impl IntoResponse {
-    (StatusCode::OK, "OK")
+pub fn get_ip(headers: &HeaderMap) -> Option<String> {
+    let mut ip: Option<String> = None;
+
+    if headers.contains_key("x-real-ip") {
+        debug!("x-real-ip header found");
+        ip = Some(
+            headers
+                .get("x-real-ip")
+                .unwrap()
+                .to_str()
+                .unwrap()
+                .to_string(),
+        );
+    } else if headers.contains_key("x-forwarded-for") {
+        debug!("x-forwarded-for header found");
+        ip = Some(
+            headers
+                .get("x-forwarded-for")
+                .unwrap()
+                .to_str()
+                .unwrap()
+                .to_string(),
+        );
+    }
+
+    ip
 }
 
 /// The handler for the HTTP request (this gets called when the HTTP GET lands at the start
@@ -91,7 +108,7 @@ async fn get_home() -> impl IntoResponse {
 /// as well as things from HTTP headers such as user-agent of the browser etc.
 async fn ws_handler(
     ws: WebSocketUpgrade,
-    ip: Option<TypedHeader<XRealIP>>,
+    headers: HeaderMap,
     user_agent: Option<TypedHeader<headers::UserAgent>>,
     ConnectInfo(addr): ConnectInfo<SocketAddr>,
     state: Arc<WebSocketState>,
@@ -106,12 +123,17 @@ async fn ws_handler(
 
     debug!("`{}` at {} connected.", user_agent, addr.to_string());
 
+    let ip = get_ip(&headers);
+    if ip.is_none() {
+        warn!("ip was not found");
+    }
+
     let statx = state.clone();
     let settings = statx.settings.lock().await;
     let whitelisted_ips = settings.whitelisted_ips.clone();
 
-    if !user_ip_allowed(ip, whitelisted_ips) {
-        return (StatusCode::FORBIDDEN, "Unauthorized access".to_string()).into_response();
+    if !user_ip_allowed(ip.unwrap(), whitelisted_ips) {
+        return (StatusCode::FORBIDDEN, "Unauthorized access").into_response();
     }
 
     // finalize the upgrade process by returning upgrade callback.
@@ -234,8 +256,8 @@ impl Gateway<WebSocketSettings> for WebSocket {
                 route("/", get(get_home)).
                 route("/ws", get({
                     let shared_state = Arc::clone(&shared_state);
-                    move |ip, ws, user_agent, info| {
-                        ws_handler(ws, ip, user_agent, info, shared_state)
+                    move |ws, headers, user_agent, info| {
+                        ws_handler(ws, headers, user_agent, info, shared_state)
                     }
                 }));
 
