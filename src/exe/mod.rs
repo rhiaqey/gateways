@@ -5,7 +5,7 @@ use crate::exe::http::start_private_http_server;
 use futures::StreamExt;
 use log::{debug, info, trace, warn};
 use rhiaqey_common::env::parse_env;
-use rhiaqey_common::executor::Executor;
+use rhiaqey_common::executor::{Executor, ExecutorPublishOptions};
 use rhiaqey_common::pubsub::RPCMessageData;
 use serde::de::DeserializeOwned;
 use std::fmt::Debug;
@@ -61,7 +61,7 @@ pub async fn run<
         tokio::select! {
             Some(message) = publisher_stream.recv() => {
                 trace!("message received from plugin: {:?}", message);
-                executor.publish(message).await;
+                executor.publish(message, ExecutorPublishOptions::default()).await;
             },
             Some(pubsub_message) = pubsub_stream.next() => {
                 trace!("message received from pubsub");
