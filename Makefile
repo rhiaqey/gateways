@@ -75,12 +75,12 @@ export PRIVATE_KEY
 ws1:
 	ID=ws1 \
 	NAME=ws-1 \
-		cargo +nightly run --bin websocket --features=websocket
+		cargo run --bin websocket --features=websocket
 
 .PHONY: build
 build:
-	cargo +nightly build
+	cargo build
 
 .PHONY: prod
 prod:
-	cargo +nightly build --release
+	cargo build --release
