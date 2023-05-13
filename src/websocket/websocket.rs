@@ -11,7 +11,7 @@ use futures::StreamExt;
 use lazy_static::lazy_static;
 use log::{debug, info, warn};
 use prometheus::{Gauge, register_gauge};
-use rhiaqey_sdk::gateway::{Gateway, GatewayConfig, GatewayMessage, GatewayMessageReceiver};
+use rhiaqey_sdk_rs::gateway::{Gateway, GatewayConfig, GatewayMessage, GatewayMessageReceiver};
 use tokio::sync::mpsc::{unbounded_channel, UnboundedSender};
 use tokio::sync::Mutex;
 use serde::{Serialize, Deserialize};

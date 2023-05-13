@@ -79,8 +79,8 @@ ws1:
 
 .PHONY: build
 build:
-	cargo build
+	cargo build -j 64
 
 .PHONY: prod
 prod:
-	cargo build --release
+	cargo build --release -j 64

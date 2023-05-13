@@ -9,7 +9,7 @@ use rhiaqey_common::executor::{Executor, ExecutorPublishOptions};
 use rhiaqey_common::pubsub::RPCMessageData;
 use serde::de::DeserializeOwned;
 use std::fmt::Debug;
-use rhiaqey_sdk::gateway::{Gateway, GatewayConfig};
+use rhiaqey_sdk_rs::gateway::{Gateway, GatewayConfig};
 
 use crate::exe::metrics::TOTAL_CHANNELS;
 
