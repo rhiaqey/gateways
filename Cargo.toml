@@ -33,12 +33,20 @@ axum = { version = "0.6", features = ["headers", "http2", "json", "macros",
     "original-uri", "tokio", "ws", "form", "query", "matched-path", "multipart"] }
 hyper = { version = "0.14", features = [ "full" ] }
 tower = { version = "0.4" }
+protobuf = { version = "3.2", features = ["bytes"] }
+prost = "0.11"
+prost-types = "0.11"
 headers-client-ip = { version = "0.1", optional = true }
+
+[build-dependencies]
+prost-build = { version = "0.11" }
 
 [features]
 websocket = [ "dep:headers-client-ip" ]
+gtfs = []
 
 [[bin]]
 name = "websocket"
 src = "src/bin/websocket.rs"
 required-features = [ "websocket" ]
+
