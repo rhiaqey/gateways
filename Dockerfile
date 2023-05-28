@@ -5,7 +5,8 @@ RUN apt-get update \
     && apt-get install -y \
       cmake \
       pkg-config \
-      libssl-dev
+      libssl-dev \
+      protobuf-compiler
 WORKDIR /usr/src/
 COPY . .
 ENV RUST_BACKTRACE=1
