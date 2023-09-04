@@ -39,7 +39,7 @@ prost-types = "0.12"
 headers-client-ip = { version = "0.1", optional = true }
 
 [build-dependencies]
-prost-build = { version = "0.11" }
+prost-build = { version = "0.12" }
 
 [features]
 websocket = [ "dep:headers-client-ip" ]
