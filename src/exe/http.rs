@@ -1,3 +1,4 @@
+use std::net::SocketAddr;
 use axum::routing::get;
 use axum::Router;
 use axum::{http::StatusCode, response::IntoResponse};
@@ -27,7 +28,7 @@ async fn get_version() -> &'static str {
     env!("CARGO_PKG_VERSION")
 }
 
-pub async fn start_private_http_server(port: u16) -> hyper::Result<()> {
+pub async fn start_private_http_server(port: u16) {
     info!("starting http server @ port {}", port);
 
     let app = Router::new()
@@ -36,9 +37,13 @@ pub async fn start_private_http_server(port: u16) -> hyper::Result<()> {
         .route("/metrics", get(get_metrics))
         .route("/version", get(get_version));
 
+    let addr = SocketAddr::from(([0, 0, 0, 0], port));
+    let listener = tokio::net::TcpListener::bind(&addr).await.unwrap();
     debug!("running http server @ port {}", port);
 
-    axum::Server::bind(&format!("0.0.0.0:{}", port).parse().unwrap())
-        .serve(app.into_make_service())
-        .await
+    axum::serve(
+        listener,
+        // app.into_make_service()
+        app.into_make_service_with_connect_info::<SocketAddr>(),
+    ).await.unwrap();
 }

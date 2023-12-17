@@ -2,10 +2,10 @@ use std::net::{IpAddr, SocketAddr};
 use std::sync::Arc;
 use async_trait::async_trait;
 use axum::extract::ws::{Message, WebSocket as WebSocketConn};
-use axum::extract::{ConnectInfo, WebSocketUpgrade};
+use axum::extract::WebSocketUpgrade;
 use axum::response::IntoResponse;
-use axum::{headers, Router, TypedHeader};
-use axum::http::{HeaderMap, StatusCode};
+use axum::Router;
+use axum::{extract::State, http::HeaderMap};
 use axum::routing::get;
 use futures::StreamExt;
 use lazy_static::lazy_static;
@@ -15,6 +15,8 @@ use rhiaqey_sdk_rs::gateway::{Gateway, GatewayConfig, GatewayMessage, GatewayMes
 use tokio::sync::mpsc::{unbounded_channel, UnboundedSender};
 use tokio::sync::Mutex;
 use serde::{Serialize, Deserialize};
+use axum_client_ip::InsecureClientIp;
+use hyper::http::StatusCode;
 
 lazy_static! {
     static ref TOTAL_CONNECTIONS: Gauge = register_gauge!(
@@ -73,34 +75,6 @@ fn user_ip_allowed(
     true
 }
 
-pub fn get_ip(headers: &HeaderMap) -> Option<String> {
-    let mut ip: Option<String> = None;
-
-    if headers.contains_key("x-real-ip") {
-        debug!("x-real-ip header found");
-        ip = Some(
-            headers
-                .get("x-real-ip")
-                .unwrap()
-                .to_str()
-                .unwrap()
-                .to_string(),
-        );
-    } else if headers.contains_key("x-forwarded-for") {
-        debug!("x-forwarded-for header found");
-        ip = Some(
-            headers
-                .get("x-forwarded-for")
-                .unwrap()
-                .to_str()
-                .unwrap()
-                .to_string(),
-        );
-    }
-
-    ip
-}
-
 /// The handler for the HTTP request (this gets called when the HTTP GET lands at the start
 /// of websocket negotiation). After this completes, the actual switching from HTTP to
 /// websocket protocol will occur.
@@ -108,13 +82,13 @@ pub fn get_ip(headers: &HeaderMap) -> Option<String> {
 /// as well as things from HTTP headers such as user-agent of the browser etc.
 async fn ws_handler(
     ws: WebSocketUpgrade,
-    headers: HeaderMap,
-    user_agent: Option<TypedHeader<headers::UserAgent>>,
-    ConnectInfo(addr): ConnectInfo<SocketAddr>,
-    state: Arc<WebSocketState>,
+    headers: HeaderMap,                         // external and internal headers
+    insecure_ip: InsecureClientIp,              // external
+    State(state): State<Arc<WebSocketState>>,   // global state
 ) -> impl IntoResponse {
     info!("[GET] Handle websocket connection");
 
+    /*
     let user_agent = if let Some(TypedHeader(user_agent)) = user_agent {
         user_agent.to_string()
     } else {
@@ -144,7 +118,9 @@ async fn ws_handler(
             addr,
             state
         )
-    })
+    })*/
+
+    (StatusCode::OK, "Access granted")
 }
 
 /// Actual websocket state machine (one will be spawned per connection)
@@ -239,32 +215,29 @@ impl Gateway<WebSocketSettings> for WebSocket {
         let settings = self.settings.clone();
         let config = self.config.clone();
 
-        tokio::task::spawn(async move {
+        tokio::spawn(async move {
             let config = config.lock().await;
             let settings = Arc::clone(&settings);
-            let host = config.host.clone().unwrap_or(String::from("0.0.0.0"));
-            let sadr = SocketAddr::from((host.parse::<IpAddr>().unwrap(), config.port));
-
-            debug!("running websocket on address {}", sadr);
 
             let shared_state = Arc::new(WebSocketState{
                 sender: Some(sender),
                 settings,
             });
 
-            let app = Router::new().
-                route("/", get(get_home)).
-                route("/ws", get({
-                    let shared_state = Arc::clone(&shared_state);
-                    move |ws, headers, user_agent, info| {
-                        ws_handler(ws, headers, user_agent, info, shared_state)
-                    }
-                }));
+            let app = Router::new()
+                .route("/", get(get_home))
+                .route("/ws", get(ws_handler))
+                .with_state(shared_state);
 
-            axum::Server::bind(&sadr)
-                .serve(app.into_make_service_with_connect_info::<SocketAddr>())
-                .await
-                .unwrap();
+            let host = config.host.clone().unwrap_or(String::from("0.0.0.0"));
+            let addr = SocketAddr::from((host.parse::<IpAddr>().unwrap(), config.port));
+            let listener = tokio::net::TcpListener::bind(&addr).await.unwrap();
+
+            axum::serve(
+                listener,
+                // app.into_make_service()
+                app.into_make_service_with_connect_info::<SocketAddr>(),
+            ).await.unwrap();
         });
     }
 
