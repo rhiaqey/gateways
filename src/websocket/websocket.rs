@@ -5,7 +5,7 @@ use axum::extract::ws::{Message, WebSocket as WebSocketConn};
 use axum::extract::WebSocketUpgrade;
 use axum::response::IntoResponse;
 use axum::Router;
-use axum::{extract::State, http::HeaderMap};
+use axum::extract::State;
 use axum::routing::get;
 use futures::StreamExt;
 use lazy_static::lazy_static;
@@ -17,6 +17,8 @@ use tokio::sync::Mutex;
 use serde::{Serialize, Deserialize};
 use axum_client_ip::InsecureClientIp;
 use hyper::http::StatusCode;
+use axum_extra::headers;
+use axum_extra::TypedHeader;
 
 lazy_static! {
     static ref TOTAL_CONNECTIONS: Gauge = register_gauge!(
@@ -57,7 +59,7 @@ async fn get_home() -> impl IntoResponse {
 }
 
 fn user_ip_allowed(
-    ip: String,
+    ip: &str,
     allowed_ips: Vec<String>,
 ) -> bool {
     if cfg!(debug_assertions) {
@@ -82,31 +84,28 @@ fn user_ip_allowed(
 /// as well as things from HTTP headers such as user-agent of the browser etc.
 async fn ws_handler(
     ws: WebSocketUpgrade,
-    headers: HeaderMap,                         // external and internal headers
+    // headers: HeaderMap,
     insecure_ip: InsecureClientIp,              // external
+    user_agent: Option<TypedHeader<headers::UserAgent>>,
     State(state): State<Arc<WebSocketState>>,   // global state
 ) -> impl IntoResponse {
     info!("[GET] Handle websocket connection");
 
-    /*
     let user_agent = if let Some(TypedHeader(user_agent)) = user_agent {
         user_agent.to_string()
     } else {
         String::from("Unknown browser")
     };
 
-    debug!("`{}` at {} connected.", user_agent, addr.to_string());
+    let ip = insecure_ip.0.to_string();
 
-    let ip = get_ip(&headers);
-    if ip.is_none() {
-        warn!("ip was not found");
-    }
+    debug!("`{}` at {} connected.", user_agent, ip);
 
     let statx = state.clone();
     let settings = statx.settings.lock().await;
     let whitelisted_ips = settings.whitelisted_ips.clone();
 
-    if !user_ip_allowed(ip.unwrap(), whitelisted_ips) {
+    if !user_ip_allowed(&ip, whitelisted_ips) {
         return (StatusCode::FORBIDDEN, "Unauthorized access").into_response();
     }
 
@@ -115,21 +114,19 @@ async fn ws_handler(
     ws.on_upgrade(move |socket| {
         handle_ws_connection(
             socket,
-            addr,
+            ip,
             state
         )
-    })*/
-
-    (StatusCode::OK, "Access granted")
+    })
 }
 
 /// Actual websocket state machine (one will be spawned per connection)
 async fn handle_ws_connection(
     socket: WebSocketConn,
-    who: SocketAddr,
+    who: String,
     state: Arc<WebSocketState>,
 ) {
-    info!("handle websocket connection: {}", who.ip());
+    info!("handle websocket connection: {}", who);
 
     let sender = state.sender.clone().unwrap();
     let (_, mut receiver) = socket.split();
