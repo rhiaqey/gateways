@@ -85,9 +85,9 @@ fn user_ip_allowed(
 async fn ws_handler(
     ws: WebSocketUpgrade,
     // headers: HeaderMap,
-    insecure_ip: InsecureClientIp,              // external
+    insecure_ip: InsecureClientIp,
     user_agent: Option<TypedHeader<headers::UserAgent>>,
-    State(state): State<Arc<WebSocketState>>,   // global state
+    State(state): State<Arc<WebSocketState>>,
 ) -> impl IntoResponse {
     info!("[GET] Handle websocket connection");
 
@@ -98,7 +98,6 @@ async fn ws_handler(
     };
 
     let ip = insecure_ip.0.to_string();
-
     debug!("`{}` at {} connected.", user_agent, ip);
 
     let statx = state.clone();
