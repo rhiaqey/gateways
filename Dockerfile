@@ -1,4 +1,4 @@
-FROM rust:1.74-slim-bullseye as builder
+FROM rust:1.75-slim-bullseye as builder
 ARG BINARY
 ARG FEATURES
 RUN apt-get update \
