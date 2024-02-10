@@ -19,6 +19,7 @@ use axum_client_ip::InsecureClientIp;
 use hyper::http::StatusCode;
 use axum_extra::headers;
 use axum_extra::TypedHeader;
+use serde_json::{json, Value};
 
 lazy_static! {
     static ref TOTAL_CONNECTIONS: Gauge = register_gauge!(
@@ -184,7 +185,7 @@ async fn handle_ws_connection(
 impl Gateway<WebSocketSettings> for WebSocket {
 
     fn setup(&mut self, config: GatewayConfig, settings: Option<WebSocketSettings>) -> GatewayMessageReceiver {
-        info!("setting up {}", self.kind());
+        info!("setting up {}", Self::kind());
 
         self.config = Arc::new(Mutex::new(config));
 
@@ -205,7 +206,7 @@ impl Gateway<WebSocketSettings> for WebSocket {
     }
 
     async fn start(&mut self) {
-        info!("starting {}", self.kind());
+        info!("starting {}", Self::kind());
 
         let sender = self.sender.clone().unwrap();
         let settings = self.settings.clone();
@@ -237,7 +238,11 @@ impl Gateway<WebSocketSettings> for WebSocket {
         });
     }
 
-    fn kind(&self) -> String {
+    fn schema() -> Value {
+        json!({})
+    }
+
+    fn kind() -> String {
         "websocket".to_string()
     }
 }
