@@ -6,7 +6,7 @@ use futures::StreamExt;
 use log::{debug, info, trace, warn};
 use rhiaqey_common::env::parse_env;
 use rhiaqey_common::executor::{Executor, ExecutorPublishOptions};
-use rhiaqey_common::pubsub::RPCMessageData;
+use rhiaqey_common::pubsub::{PublisherRegistrationMessage, RPCMessage, RPCMessageData};
 use serde::de::DeserializeOwned;
 use std::fmt::Debug;
 use rhiaqey_sdk_rs::gateway::{Gateway, GatewayConfig};
@@ -46,6 +46,22 @@ pub async fn run<
         Err(error) => panic!("failed to setup gateway: {error}"),
         Ok(sender) => sender,
     };
+
+    let publisher_registration_message = RPCMessage {
+        data: RPCMessageData::RegisterPublisher(PublisherRegistrationMessage {
+            id: executor.get_id(),
+            name: executor.get_name(),
+            namespace: executor.get_namespace(),
+            schema: P::schema(),
+        }),
+    };
+
+    executor
+        .rpc(executor.get_namespace(), publisher_registration_message)
+        .await
+        .expect("Publisher must first register with hub");
+
+    debug!("rpc registration message sent");
 
     plugin.start().await;
 
