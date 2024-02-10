@@ -1,7 +1,7 @@
 export RUST_BACKTRACE=full
 export RUST_LOG=debug
 export DEBUG=true
-export REDIS_PASSWORD=7tgbBSO2Yu
+export REDIS_PASSWORD=welcome
 #export REDIS_SENTINEL_MASTER=mymaster
 export REDIS_ADDRESS=localhost:6379
 export REDIS_SENTINEL_ADDRESSES=localhost:26379
