@@ -240,9 +240,7 @@ impl Gateway<WebSocketSettings> for WebSocket {
 
     fn schema() -> Value {
         json!({
-            "$id": "https://example.com/ws-gateway-settings.schema.json",
-            "$schema": "https://json-schema.org/draft/2020-12/schema",
-            "description": "Websocket gateway",
+            "$schema": "http://json-schema.org/draft-07/schema#",
             "type": "object",
             "properties": {
                 "WhitelistedIPs": {
