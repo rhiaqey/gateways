@@ -239,7 +239,22 @@ impl Gateway<WebSocketSettings> for WebSocket {
     }
 
     fn schema() -> Value {
-        json!({})
+        json!({
+            "$id": "https://example.com/iss-position-settings.schema.json",
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "description": "Websocket gateway",
+            "type": "object",
+            "properties": {
+                "WhitelistedIPs": {
+                    "type": "array",
+                    "items": {
+                        "type": "string",
+                        "format": "ipv4"
+                    }
+                }
+            },
+            "required": []
+        })
     }
 
     fn kind() -> String {
