@@ -91,11 +91,14 @@ pub async fn run<
                                 TOTAL_CHANNELS.set(channel_count);
                             }
                             RPCMessageData::UpdateSettings() => {
-                                if let Ok(settings) = executor.read_settings::<S>().await {
-                                    plugin.set_settings(settings).await;
-                                    trace!("settings updated correctly");
-                                } else {
-                                    warn!("failed to read settings");
+                                match executor.read_settings::<S>().await {
+                                    Ok(settings) => {
+                                        plugin.set_settings(settings).await;
+                                        trace!("settings updated correctly");
+                                    },
+                                    Err(err) => {
+                                        warn!("failed to read settings {err}");
+                                    }
                                 }
                             }
                             _ => {}
