@@ -253,7 +253,8 @@ impl Gateway<WebSocketSettings> for WebSocket {
                     }
                 }
             },
-            "required": [ "WhitelistedIPs" ]
+            "required": [ "WhitelistedIPs" ],
+            "additionalProperties": false
         })
     }
 
