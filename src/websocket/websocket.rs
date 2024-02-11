@@ -249,7 +249,8 @@ impl Gateway<WebSocketSettings> for WebSocket {
                     "type": "array",
                     "items": {
                         "type": "string",
-                        "format": "ipv4"
+                        "format": "ipv4",
+                        "examples": [ "192.168.0.1", "10.0.0.1" ]
                     }
                 }
             },
