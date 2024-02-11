@@ -89,12 +89,14 @@ pub async fn run<
                                 let channel_count = channel_list.channels.len() as f64;
                                 executor.set_channels(channel_list.channels).await;
                                 TOTAL_CHANNELS.set(channel_count);
+                                info!("total channels assigned to {channel_count}");
                             }
                             RPCMessageData::UpdateSettings() => {
+                                debug!("received update settings rpc");
                                 match executor.read_settings::<S>().await {
                                     Ok(settings) => {
                                         plugin.set_settings(settings).await;
-                                        trace!("settings updated correctly");
+                                        info!("settings updated successfully");
                                     },
                                     Err(err) => {
                                         warn!("failed to read settings {err}");
