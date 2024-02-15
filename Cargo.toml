@@ -44,9 +44,9 @@ prost-build = { version = "0.12" }
 [features]
 websocket = []
 gtfs = []
+all = ["websocket", "gtfs"]
 
 [[bin]]
 name = "websocket"
 src = "src/bin/websocket.rs"
 required-features = [ "websocket" ]
-
