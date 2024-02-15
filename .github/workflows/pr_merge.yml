@@ -1,0 +1,138 @@
+name: PR Merge
+
+on:
+  push:
+    branches:
+      - master
+
+env:
+  CI: true
+  CARGO_TERM_COLOR: always
+  CARGO_TAG_NAME: "GitHub Actions"
+  CARGO_TAG_EMAIL: "github-actions@users.noreply.github.com"
+
+permissions:
+  contents: write
+
+jobs:
+  Setup:
+    runs-on: ubuntu-latest
+
+    outputs:
+      git_tag: ${{ steps.prepare_tag.outputs.GIT_TAG }}
+      git_branch: ${{ steps.extract_branch.outputs.GIT_BRANCH }}
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: arduino/setup-protoc@v3
+      - uses: baptiste0928/cargo-install@v3
+        with:
+          crate: cargo-tag
+
+      - id: prepare_tag
+        run: |
+          cargo tag patch
+          GIT_TAG="$(cargo tag current)"
+          echo "GIT_TAG=$GIT_TAG" >> $GITHUB_ENV
+          echo "GIT_TAG=$GIT_TAG" >> $GITHUB_OUTPUT
+          echo "Found $GIT_TAG tag"
+          git tag -d $GIT_TAG
+
+      - id: extract_branch
+        run: |
+          # Short name for current branch. For PRs, use target branch (base ref)
+          GIT_BRANCH=${GITHUB_BASE_REF:-${GITHUB_REF#refs/heads/}}
+          echo "GIT_BRANCH=$GIT_BRANCH" >> $GITHUB_ENV
+          echo "GIT_BRANCH=$GIT_BRANCH" >> $GITHUB_OUTPUT
+
+      - uses: docker/login-action@v3
+        if: github.event_name != 'pull_request'
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+  Publish:
+    runs-on: ubuntu-latest
+    needs:
+      - Setup
+    strategy:
+      matrix:
+        gateways: [
+          {image: "rhiaqey/websocket", binary: "websocket", features: "websocket"}
+        ]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: arduino/setup-protoc@v3
+      - uses: baptiste0928/cargo-install@v3
+        with:
+          crate: cargo-tag
+      - run: cargo tag patch
+      - id: meta
+        uses: docker/metadata-action@8e5442c4ef9f78752691e2d8f8d19755c6f78e81
+        with:
+          images: ${{ matrix.gateways.image }}
+      - uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+      - id: build-and-push
+        uses: docker/build-push-action@4a13e500e55cf31b7a5d59a38ab2040ab0f42f56
+        with:
+          context: .
+          push: ${{ github.event_name != 'pull_request' }}
+          tags: ${{ matrix.gateways.image }}:${{ needs.Setup.outputs.git_tag }},${{ matrix.gateways.image }}:latest
+          labels: ${{ steps.meta.outputs.labels }}
+          build-args: |
+            BINARY=${{ matrix.gateways.binary }}
+            FEATURES=${{ matrix.gateways.features }}
+
+  Commit:
+    runs-on: ubuntu-latest
+    needs:
+      - Publish
+      - Setup
+    env:
+      GIT_TAG: ${{ needs.Setup.outputs.git_tag }}
+      GIT_BRANCH: ${{ needs.Setup.outputs.git_branch }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: arduino/setup-protoc@v3
+      - uses: baptiste0928/cargo-install@v3
+        with:
+          crate: cargo-tag
+      - run: |
+          cargo tag patch
+          git tag -d $GIT_TAG
+      - name: Commit and push
+        run: |
+          echo "Current branch $GIT_BRANCH"
+
+          git config user.name "$CARGO_TAG_NAME"
+          git config user.email "$CARGO_TAG_EMAIL"
+
+          git add .
+          git commit -m "Release $GIT_TAG
+
+          [skip ci]
+          "
+
+          git tag $GIT_TAG
+          git push origin $GIT_TAG
+          git push origin $GIT_BRANCH
+
+#      - name: Push Charts to GHCR
+#        if: ${{ github.event_name != 'pull_request' }}
+#        run: |
+#          mkdir charts
+#          for pkg in k8s/*; do
+#            if [ -z "${pkg:-}" ]; then
+#              break
+#            fi
+#            helm package "${pkg}" -d charts
+#          done
+#          for pkg in charts/*; do
+#            if [ -z "${pkg:-}" ]; then
+#              break
+#            fi
+#            helm push "${pkg}" oci://ghcr.io/${GITHUB_REPOSITORY_OWNER}/charts
+#          done
