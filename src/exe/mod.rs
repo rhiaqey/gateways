@@ -7,9 +7,9 @@ use log::{debug, info, trace, warn};
 use rhiaqey_common::env::parse_env;
 use rhiaqey_common::executor::{Executor, ExecutorPublishOptions};
 use rhiaqey_common::pubsub::{PublisherRegistrationMessage, RPCMessage, RPCMessageData};
+use rhiaqey_sdk_rs::gateway::{Gateway, GatewayConfig};
 use serde::de::DeserializeOwned;
 use std::fmt::Debug;
-use rhiaqey_sdk_rs::gateway::{Gateway, GatewayConfig};
 
 use crate::exe::metrics::TOTAL_CHANNELS;
 
@@ -43,7 +43,7 @@ pub async fn run<
     };
 
     let mut publisher_stream = match plugin.setup(config, Some(settings)) {
-        Err(error) => panic!("failed to setup gateway: {error}"),
+        Err(error) => panic!("failed to setup publisher: {error}"),
         Ok(sender) => sender,
     };
 
@@ -70,8 +70,9 @@ pub async fn run<
     let mut pubsub_stream = executor.create_hub_to_publishers_pubsub().await.unwrap();
     let channel_count = executor.get_channel_count().await as f64;
     TOTAL_CHANNELS.set(channel_count);
+    debug!("channel count is {channel_count}");
 
-    debug!("stream is ready");
+    info!("stream is ready");
 
     loop {
         tokio::select! {
