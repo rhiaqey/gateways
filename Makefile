@@ -79,9 +79,13 @@ ws1:
 build:
 	cargo build -j 64
 
+.PHONY: dev
+dev:
+	cargo build --features=all -j 64
+
 .PHONY: prod
 prod:
-	cargo build --release -j 64
+	cargo build --release --features=all -j 64
 
 .PHONY: redis
 redis:
