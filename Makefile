@@ -76,8 +76,7 @@ ws1:
 		cargo run --bin websocket --features=websocket
 
 .PHONY: build
-build:
-	cargo build -j 64
+build: dev
 
 .PHONY: dev
 dev:
