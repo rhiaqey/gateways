@@ -53,6 +53,10 @@ jobs:
       - run: |
           ls -lah ~/.cargo
           ls -lah ~/.cargo/bin
+          echo $PATH
+          cat ~/.bashrc
+          source ~/.bashrc
+          export PATH="$PATH:$HOME/.cargo/bin"
 
       - name: Cargo Verison
         id: verison
