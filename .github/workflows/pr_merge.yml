@@ -9,7 +9,7 @@ env:
   CI: true
   CARGO_TERM_COLOR: always
   CARGO_TAG_NAME: "GitHub Actions"
-  CARGO_TAG_EMAIL: "github-actions@users.noreply.github.com"
+  CARGO_TAG_EMAIL: "github-actions@github.com"
 
 permissions:
   contents: write
@@ -69,9 +69,6 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-
-      - name: Install Protoc
-        uses: arduino/setup-protoc@v3
 
       - name: Git setup
         run: |
