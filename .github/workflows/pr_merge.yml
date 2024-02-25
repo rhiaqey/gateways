@@ -50,6 +50,10 @@ jobs:
           name: cargo-verison
           path: ~/.cargo/bin/
 
+      - run: |
+          ls -lah ~/.cargo
+          ls -lah ~/.cargo/bin
+
       - name: Cargo Verison
         id: verison
         uses: dimitrmo/cargo-verison-action@v1.0.17
