@@ -1434,7 +1434,7 @@ dependencies = [
 
 [[package]]
 name = "rhiaqey-gateways"
-version = "0.1.16"
+version = "0.1.17"
 dependencies = [
  "async-trait",
  "axum",
