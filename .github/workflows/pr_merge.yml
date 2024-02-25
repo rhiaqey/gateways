@@ -50,7 +50,8 @@ jobs:
           name: cargo-verison
           path: ~/.cargo/bin/
 
-      - run: chmod +x ~/.cargo/bin/cargo-verison
+      - name: Cargo Verison permissions
+        run: chmod +x ~/.cargo/bin/cargo-verison
 
       - name: Cargo Verison
         id: verison
@@ -100,10 +101,20 @@ jobs:
           git config user.name "$CARGO_TAG_NAME"
           git config user.email "$CARGO_TAG_EMAIL"
 
+      - name: Cargo Verison Setup
+        uses: actions/download-artifact@v4
+        with:
+          name: cargo-verison
+          path: ~/.cargo/bin/
+
+      - name: Cargo Verison permissions
+        run: chmod +x ~/.cargo/bin/cargo-verison
+
       - name: Cargo Verison
         id: verison
-        uses: dimitrmo/cargo-verison-action@v1.0.15
+        uses: dimitrmo/cargo-verison-action@v1.0.17
         with:
+          skip-install: true
           message: "Release %s
 
           [skip ci]
@@ -120,6 +131,12 @@ jobs:
           echo "Current branch $GIT_BRANCH"
           git push origin $GIT_BRANCH
           git push origin $GIT_BRANCH --tags
+
+      - name: Cleanup
+        uses: geekyeggo/delete-artifact@v4
+        with:
+          name: cargo-verison
+          failOnError: false
 
 #      - name: Push Charts to GHCR
 #        if: ${{ github.event_name != 'pull_request' }}
