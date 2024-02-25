@@ -50,14 +50,7 @@ jobs:
           name: cargo-verison
           path: ~/.cargo/bin/
 
-      - run: |
-          ls -lah ~/.cargo
-          ls -lah ~/.cargo/bin
-          echo $PATH
-          cat ~/.bashrc
-          source ~/.bashrc
-          export PATH="$PATH:$HOME/.cargo/bin"
-          chmod +x ~/.cargo/bin/cargo-verison
+      - run: chmod +x ~/.cargo/bin/cargo-verison
 
       - name: Cargo Verison
         id: verison
