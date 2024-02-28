@@ -78,7 +78,7 @@ pub async fn run<
         tokio::select! {
             Some(message) = publisher_stream.recv() => {
                 trace!("message received from plugin: {:?}", message);
-                executor.publish(message, ExecutorPublishOptions::default()).await;
+                let _ = executor.publish(message, ExecutorPublishOptions::default()).await;
             },
             Some(pubsub_message) = pubsub_stream.next() => {
                 trace!("message received from pubsub");
