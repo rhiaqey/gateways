@@ -44,7 +44,6 @@ prost-build = { version = "0.12" }
 [features]
 websocket = []
 gtfs = []
-all = ["websocket", "gtfs"]
 
 [[bin]]
 name = "websocket"

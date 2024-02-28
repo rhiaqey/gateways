@@ -80,11 +80,11 @@ build: dev
 
 .PHONY: dev
 dev:
-	cargo build --features=all -j 64
+	cargo build --all-features -j 64
 
 .PHONY: prod
 prod:
-	cargo build --release --features=all -j 64
+	cargo build --release --all-features -j 64
 
 .PHONY: redis
 redis:
