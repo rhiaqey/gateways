@@ -1,4 +1,4 @@
-FROM rust:1.75-slim-bullseye as builder
+FROM rust:1.76-slim-bullseye as builder
 
 ARG BINARY
 ARG FEATURES
