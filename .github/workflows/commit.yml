@@ -23,10 +23,10 @@ jobs:
         uses: arduino/setup-protoc@v3
 
       - name: Build
-        run: cargo build --features all
+        run: cargo build --all-features
 
       - name: Run tests
-        run: cargo test --features all
+        run: cargo test --all-features
 
   CI:
     runs-on: ubuntu-latest
