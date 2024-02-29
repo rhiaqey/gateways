@@ -20,6 +20,7 @@ use hyper::http::StatusCode;
 use axum_extra::headers;
 use axum_extra::TypedHeader;
 use serde_json::{json, Value};
+use rhiaqey_sdk_rs::settings::Settings;
 
 lazy_static! {
     static ref TOTAL_CONNECTIONS: Gauge = register_gauge!(
@@ -40,6 +41,10 @@ impl Default for WebSocketSettings {
             whitelisted_ips: vec!(),
         }
     }
+}
+
+impl Settings for WebSocketSettings {
+    //
 }
 
 #[derive(Default, Debug)]

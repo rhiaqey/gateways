@@ -8,14 +8,13 @@ use rhiaqey_common::env::parse_env;
 use rhiaqey_common::executor::{Executor, ExecutorPublishOptions};
 use rhiaqey_common::pubsub::{PublisherRegistrationMessage, RPCMessage, RPCMessageData};
 use rhiaqey_sdk_rs::gateway::{Gateway, GatewayConfig};
-use serde::de::DeserializeOwned;
-use std::fmt::Debug;
+use rhiaqey_sdk_rs::settings::Settings;
 
 use crate::exe::metrics::TOTAL_CHANNELS;
 
 pub async fn run<
     P: Gateway<S> + Default + Send + 'static,
-    S: DeserializeOwned + Default + Debug,
+    S: Settings,
 >() {
     env_logger::init();
     let env = parse_env();
