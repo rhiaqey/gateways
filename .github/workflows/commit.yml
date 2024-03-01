@@ -41,6 +41,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      # Build and push Docker image with Buildx (don't push on PR)
+      # https://github.com/docker/build-push-action
       - name: Build docker image for ${{ matrix.gateways.binary }}
         uses: docker/build-push-action@4a13e500e55cf31b7a5d59a38ab2040ab0f42f56
         with:
