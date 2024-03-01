@@ -42,13 +42,15 @@ RUN case "${TARGETPLATFORM}" in \
 FROM debian:bookworm-slim
 
 ARG BINARY
-ARG USER=1001
+ARG USER=1000
+ARG GROUP=1000
 
 ENV BINARY=$BINARY
 ENV DEBIAN_FRONTEND=noninteractive
 ENV RUST_BACKTRACE=1
 ENV RUST_LOG=trace
 ENV USER=$USER
+ENV GROUP=$GROUP
 
 LABEL org.opencontainers.image.description="Rhiaqey Gateway ${BINARY}"
 
@@ -61,10 +63,12 @@ RUN    apt-get update \
     && rm -rf /var/lib/apt/lists/* \
     && update-ca-certificates
 
-RUN useradd -ms /bin/bash $USER
+# Create the specified group and user, and add the user to the group
+RUN groupadd -g $GROUP $GROUP \
+    && useradd -u $USER -ms /bin/bash -g $GROUP $USER
 
 USER $USER
 
-COPY --from=builder --chown=$USER:$USER /usr/local/cargo/bin/${BINARY} /usr/local/bin/${BINARY}
+COPY --from=builder --chown=$USER:$GROUP /usr/local/cargo/bin/${BINARY} /usr/local/bin/${BINARY}
 
 CMD [ "sh", "-c", "${BINARY}" ]
