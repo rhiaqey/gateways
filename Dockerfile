@@ -9,7 +9,6 @@ ENV RUST_BACKTRACE=1
 RUN echo Building $TARGETPLATFORM on $BUILDPLATFORM
 
 RUN    apt-get update \
-    && apt-get upgrade -y \
     && apt-get install -y \
         gcc-aarch64-linux-gnu \
         libc6-dev-arm64-cross \
@@ -21,7 +20,8 @@ RUN    apt-get update \
         libc-bin \
         libc6-dev \
         protobuf-compiler \
-    && rm -rf /var/lib/apt/lists/*
+    && rm -rf /var/lib/apt/lists/* \
+    && update-ca-certificates
 
 # Set the default target to ARM64
 ENV CARGO_TARGET_AARCH64_UNKNOWN_LINUX_GNU_LINKER=aarch64-linux-gnu-gcc
@@ -53,7 +53,6 @@ ENV USER=$USER
 LABEL org.opencontainers.image.description="Rhiaqey Gateway ${BINARY}"
 
 RUN    apt-get update \
-    && apt-get upgrade -y \
     && apt-get install -y \
         ca-certificates \
         net-tools \
