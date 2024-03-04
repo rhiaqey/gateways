@@ -153,7 +153,9 @@ async fn handle_ws_connection(
                             debug!("gateway message arrived (text)");
                             sender.send(gateway_message).expect("could not send gateway message upstream");
                         }
-                        Err(error) => warn!("error parsing gateway message {error}")
+                        Err(error) => {
+                            warn!("error parsing gateway text message: {error}");
+                        }
                     }
                 }
                 Message::Binary(raw) => {
@@ -162,7 +164,9 @@ async fn handle_ws_connection(
                             debug!("gateway message arrived (text)");
                             sender.send(gateway_message).expect("could not send gateway message upstream");
                         }
-                        Err(error) => warn!("error parsing gateway message {error}")
+                        Err(error) => {
+                            warn!("error parsing gateway binary message: {error}");
+                        }
                     }
                 }
                 Message::Close(c) => {
