@@ -31,7 +31,10 @@ pub async fn run<P: Gateway<S> + Default + Send + 'static, S: Settings>() {
 
     let mut plugin = P::default();
     let port = executor.get_private_port();
-    let settings = executor.read_settings_async::<S>().await.unwrap_or(S::default());
+    let settings = executor
+        .read_settings_async::<S>()
+        .await
+        .unwrap_or(S::default());
 
     let config = GatewayConfig {
         port: executor.get_public_port(),
@@ -62,7 +65,10 @@ pub async fn run<P: Gateway<S> + Default + Send + 'static, S: Settings>() {
 
     tokio::spawn(start_private_http_server(port));
 
-    let mut pubsub_stream = executor.create_hub_to_publishers_pubsub_async().await.unwrap();
+    let mut pubsub_stream = executor
+        .create_hub_to_publishers_pubsub_async()
+        .await
+        .unwrap();
     let channel_count = executor.get_channel_count_async().await as f64;
     TOTAL_CHANNELS.set(channel_count);
     debug!("channel count is {channel_count}");

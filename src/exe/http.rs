@@ -1,9 +1,9 @@
-use std::net::SocketAddr;
 use axum::routing::get;
 use axum::Router;
 use axum::{http::StatusCode, response::IntoResponse};
 use log::{debug, info};
 use prometheus::{Encoder, TextEncoder};
+use std::net::SocketAddr;
 
 async fn get_ready() -> impl IntoResponse {
     StatusCode::OK
@@ -45,5 +45,7 @@ pub async fn start_private_http_server(port: u16) {
         listener,
         // app.into_make_service()
         app.into_make_service_with_connect_info::<SocketAddr>(),
-    ).await.unwrap();
+    )
+    .await
+    .unwrap();
 }
