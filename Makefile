@@ -1,10 +1,12 @@
+export REDIS_MODE=standalone
+export REDIS_PASSWORD=welcome
+export REDIS_ADDRESS=0.0.0.0:6379
+export REDIS_SENTINEL_MASTER=mymaster
+export REDIS_SENTINEL_ADDRESSES=localhost:26379,localhost:26380,localhost:26381
+
 export RUST_BACKTRACE=full
 export RUST_LOG=debug
 export DEBUG=true
-export REDIS_PASSWORD=welcome
-#export REDIS_SENTINEL_MASTER=mymaster
-export REDIS_ADDRESS=localhost:6379
-export REDIS_SENTINEL_ADDRESSES=localhost:26379
 export PRIVATE_PORT=3010
 export PUBLIC_PORT=3011
 export NAMESPACE=rhiaqey
@@ -89,19 +91,6 @@ prod:
 .PHONY: redis
 redis:
 	docker run -it --rm --name redis -p 6379:6379 \
-		-e ALLOW_EMPTY_PASSWORD=yes \
-		bitnami/redis:7.2.4
-
-.PHONY: sentinel
-sentinel:
-	docker run -it --rm --name redis-sentinel -p 26379:26379 \
-		-e ALLOW_EMPTY_PASSWORD=yes \
-		-e REDIS_MASTER_HOST=localhost \
-		bitnami/redis-sentinel:7.2.4
-
-.PHONY: sentinel2
-sentinel2:
-	docker run -it --rm --name redis-sentinel-2 -p 26380:26379 \
-		-e ALLOW_EMPTY_PASSWORD=yes \
-		-e REDIS_MASTER_HOST=localhost \
-		bitnami/redis-sentinel:7.2.4
+		-e ALLOW_EMPTY_PASSWORD=no \
+		-e REDIS_PASSWORD=${REDIS_PASSWORD} \
+		rhiaqey/redis:latest
