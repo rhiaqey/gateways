@@ -19,19 +19,19 @@ codegen-units = 1
 [dependencies]
 rhiaqey-sdk-rs = { git = "https://github.com/rhiaqey/sdk-rs.git" }
 rhiaqey-common = { git = "https://github.com/rhiaqey/common.git" }
-serde = { version = "1.0", features = [ "derive" ]}
+serde = { version = "1.0", features = ["derive"] }
 serde_json = "1.0"
 env_logger = "0.11"
 log = "0.4"
-prometheus = { version = "0.13", features = [ "process" ] }
+prometheus = { version = "0.13", features = ["process"] }
 async-trait = "0.1"
 futures = "0.3"
 lazy_static = { version = "1.4" }
-rustis = { version = "0.12", features = [ "redis-json", "tokio-runtime" ] }
-tokio = { version = "1.36", features = [ "full", "rt", "rt-multi-thread" ] }
+rustis = { version = "0.12", features = ["redis-json", "tokio-runtime"] }
+tokio = { version = "1.36", features = ["full", "rt", "rt-multi-thread"] }
 axum = { version = "0.7", features = ["http2", "json", "macros",
     "original-uri", "tokio", "ws", "form", "query", "matched-path", "multipart"] }
-hyper = { version = "1.2", features = [ "full" ] }
+hyper = { version = "1.2", features = ["full"] }
 protobuf = { version = "3.4", features = ["bytes"] }
 prost = "0.12"
 prost-types = "0.12"
@@ -49,4 +49,4 @@ gtfs = []
 [[bin]]
 name = "websocket"
 src = "src/bin/websocket.rs"
-required-features = [ "websocket" ]
+required-features = ["websocket"]
