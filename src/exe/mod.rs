@@ -89,10 +89,10 @@ pub async fn run<P: Gateway<S> + Default + Send + 'static, S: Settings>() {
                 if let Ok(message) = pubsub_message {
                     if let Some(rpc_message) = executor.extract_pubsub_message(message) {
                         match rpc_message.data {
-                            RPCMessageData::AssignChannels(channel_list) => {
-                                debug!("received assign channels rpc {:?}", channel_list);
-                                let channel_count = channel_list.channels.len() as f64;
-                                executor.set_channels_async(channel_list.channels).await;
+                            RPCMessageData::AssignChannels(channels) => {
+                                debug!("received assign channels rpc {:?}", channels);
+                                let channel_count = channels.len() as f64;
+                                executor.set_channels_async(channels).await;
                                 TOTAL_CHANNELS.set(channel_count);
                                 info!("total channels assigned to {channel_count}");
                             }
