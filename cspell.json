@@ -7,7 +7,13 @@
         "astros",
         "chrono",
         "reqwest",
-        "rhiaqey"
+        "rhiaqey",
+        "gtfs",
+        "statx",
+        "prost",
+        "proto",
+        "protos",
+        "protoc"
     ],
     "ignoreWords": [],
     "import": []
