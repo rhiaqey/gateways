@@ -85,7 +85,7 @@ fn user_ip_allowed(ip: &str, allowed_ips: Vec<String>) -> bool {
 /// of websocket negotiation). After this completes, the actual switching from HTTP to
 /// websocket protocol will occur.
 /// This is the last point where we can extract TCP/IP metadata such as IP address of the client
-/// as well as things from HTTP headers such as user-agent of the browser etc.
+/// as well as things from HTTP headers such as user-agent of the browser, etc.
 async fn ws_handler(
     ws: WebSocketUpgrade,
     // headers: HeaderMap,
@@ -259,6 +259,13 @@ impl Gateway<WebSocketSettings> for WebSocket {
             },
             "required": [ "WhitelistedIPs" ],
             "additionalProperties": false
+        })
+    }
+
+    async fn metrics(&self) -> Value {
+        let total = TOTAL_CONNECTIONS.get();
+        json!({
+            "connections": total
         })
     }
 

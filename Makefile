@@ -5,7 +5,7 @@ export REDIS_SENTINEL_MASTER=mymaster
 export REDIS_SENTINEL_ADDRESSES=localhost:26379,localhost:26380,localhost:26381
 
 export RUST_BACKTRACE=full
-export RUST_LOG=debug
+export RUST_LOG=trace
 export DEBUG=true
 export PRIVATE_PORT=3010
 export PUBLIC_PORT=3011
@@ -82,11 +82,11 @@ build: dev
 
 .PHONY: dev
 dev:
-	cargo build --all-features -j 64
+	cargo build --all-features
 
 .PHONY: prod
 prod:
-	cargo build --release --all-features -j 64
+	cargo build --release --all-features
 
 .PHONY: redis
 redis:

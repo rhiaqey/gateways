@@ -6,9 +6,13 @@ use futures::StreamExt;
 use log::{debug, info, trace, warn};
 use rhiaqey_common::env::parse_env;
 use rhiaqey_common::executor::{Executor, ExecutorPublishOptions};
-use rhiaqey_common::pubsub::{PublisherRegistrationMessage, RPCMessage, RPCMessageData};
+use rhiaqey_common::pubsub::{
+    MetricsMessage, PublisherRegistrationMessage, RPCMessage, RPCMessageData,
+};
 use rhiaqey_sdk_rs::gateway::{Gateway, GatewayConfig};
 use rhiaqey_sdk_rs::settings::Settings;
+use serde_json::json;
+use std::time::Duration;
 
 use crate::exe::metrics::TOTAL_CHANNELS;
 
@@ -57,7 +61,7 @@ pub async fn run<P: Gateway<S> + Default + Send + 'static, S: Settings>() {
 
     executor
         .rpc(executor.get_namespace(), publisher_registration_message)
-        .expect("Publisher must first register with hub");
+        .expect("publisher must first register with hub");
 
     debug!("rpc registration message sent");
 
@@ -65,18 +69,40 @@ pub async fn run<P: Gateway<S> + Default + Send + 'static, S: Settings>() {
 
     tokio::spawn(start_private_http_server(port));
 
+    let mut interval = tokio::time::interval(Duration::from_secs(10));
+    trace!("interval ready");
+
     let mut pubsub_stream = executor
         .create_hub_to_publishers_pubsub_async()
         .await
         .unwrap();
+
     let channel_count = executor.get_channel_count_async().await as f64;
     TOTAL_CHANNELS.set(channel_count);
-    debug!("channel count is {channel_count}");
+    trace!("channel count is {channel_count}");
 
-    info!("stream is ready");
+    info!("ready, set, go...");
 
     loop {
         tokio::select! {
+            _ = interval.tick() => {
+                executor.rpc(executor.get_namespace(), RPCMessage {
+                    data: RPCMessageData::Metrics(MetricsMessage {
+                        id: executor.get_id(),
+                        name: executor.get_name(),
+                        namespace: executor.get_namespace(),
+                        metrics: json!({
+                            "common": {
+                                "total_channels": TOTAL_CHANNELS.get()
+                            },
+                            "gateway": plugin.metrics().await
+                        })
+                    }),
+                })
+                .expect("failed to send metrics");
+
+                trace!("metrics sent");
+            },
             Some(message) = publisher_stream.recv() => {
                 trace!("message received from plugin: {:?}", message);
                 match executor.publish_async(message, ExecutorPublishOptions::default()).await {
@@ -85,7 +111,7 @@ pub async fn run<P: Gateway<S> + Default + Send + 'static, S: Settings>() {
                 }
             },
             Some(pubsub_message) = pubsub_stream.next() => {
-                trace!("message received from pubsub");
+                trace!("message received from hub");
                 if let Ok(message) = pubsub_message {
                     if let Some(rpc_message) = executor.extract_pubsub_message(message) {
                         match rpc_message.data {
