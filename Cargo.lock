@@ -1802,7 +1802,7 @@ dependencies = [
 
 [[package]]
 name = "rhiaqey-gateway-gtfs"
-version = "0.1.56"
+version = "0.1.57"
 dependencies = [
  "async-trait",
  "env_logger",
@@ -1820,7 +1820,7 @@ dependencies = [
 
 [[package]]
 name = "rhiaqey-gateway-ws"
-version = "0.1.56"
+version = "0.1.57"
 dependencies = [
  "async-trait",
  "axum",
@@ -1841,7 +1841,7 @@ dependencies = [
 
 [[package]]
 name = "rhiaqey-gateways"
-version = "0.1.56"
+version = "0.1.57"
 dependencies = [
  "async-trait",
  "axum",
