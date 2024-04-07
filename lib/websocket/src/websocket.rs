@@ -1,4 +1,3 @@
-use async_trait::async_trait;
 use axum::extract::ws::{Message, WebSocket as WebSocketConn};
 use axum::extract::State;
 use axum::extract::WebSocketUpgrade;
@@ -183,7 +182,6 @@ async fn handle_ws_connection(socket: WebSocketConn, who: String, state: Arc<Web
     TOTAL_CONNECTIONS.inc();
 }
 
-#[async_trait]
 impl Gateway<WebSocketSettings> for WebSocket {
     fn setup(
         &mut self,
