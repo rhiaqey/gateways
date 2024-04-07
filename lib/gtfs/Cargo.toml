@@ -1,0 +1,27 @@
+[package]
+name = "rhiaqey-gateway-gtfs"
+version.workspace = true
+edition.workspace = true
+
+[badges]
+maintenance = { status = "experimental" }
+
+[lib]
+# https://doc.rust-lang.org/reference/linkage.html
+crate-type = ["lib", "cdylib"]
+
+[dependencies]
+async-trait = { workspace = true }
+rhiaqey-sdk-rs = { workspace = true }
+rhiaqey-common = { workspace = true }
+tokio = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+env_logger = { workspace = true }
+log = { workspace = true }
+protobuf = { version = "3.4", features = ["bytes"] }
+prost = "0.12"
+prost-types = "0.12"
+
+[build-dependencies]
+prost-build = { version = "0.12" }

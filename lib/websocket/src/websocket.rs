@@ -54,7 +54,7 @@ pub struct WebSocket {
 }
 
 #[derive(Debug)]
-pub struct WebSocketState {
+struct WebSocketState {
     sender: Option<UnboundedSender<GatewayMessage>>,
     settings: Arc<Mutex<WebSocketSettings>>,
 }
@@ -226,7 +226,7 @@ impl Gateway<WebSocketSettings> for WebSocket {
 
             let app = Router::new()
                 .route("/", get(get_home))
-                .route("/ws", get(ws_handler))
+                .route("/websocket", get(ws_handler))
                 .with_state(shared_state);
 
             let host = config.host.clone().unwrap_or(String::from("0.0.0.0"));

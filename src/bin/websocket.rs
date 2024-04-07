@@ -1,4 +1,4 @@
-use rhiaqey_gateways::websocket::websocket::{WebSocket, WebSocketSettings};
+use rhiaqey_gateway_ws::websocket::{WebSocket, WebSocketSettings};
 
 #[tokio::main]
 async fn main() {

@@ -11,6 +11,6 @@ fn main() -> Result<()> {
     );*/
     prost_build
         .default_package_filename("gtfs")
-        .compile_protos(&["src/gtfs/gtfs-realtime.proto"], &["src"])?;
+        .compile_protos(&["src/gtfs-realtime.proto"], &["src"])?;
     Ok(())
 }
