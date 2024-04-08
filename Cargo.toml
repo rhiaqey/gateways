@@ -20,7 +20,7 @@ codegen-units = 1
 members = ["lib/gtfs", "lib/websocket"]
 
 [workspace.package]
-version = "0.1.58"
+version = "0.1.59"
 edition = "2021"
 
 [workspace.dependencies]
