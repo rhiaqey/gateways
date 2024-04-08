@@ -11,21 +11,6 @@ export PRIVATE_PORT=3010
 export PUBLIC_PORT=3011
 export NAMESPACE=rhiaqey
 
-define CHANNELS
-[
-	{
-		"Name": "sdf",
-		"Size": 10
-	},
-	{
-		"Name": "cokoland",
-		"Size": 15
-	}
-]
-endef
-
-export CHANNELS
-
 define PUBLIC_KEY
 -----BEGIN RSA PUBLIC KEY-----
 MIIBCgKCAQEAwWOo7UYK8upVY3qf1zvpwdyVL+4KWwKx4lKQXd5ljiEjNBdhQlRP

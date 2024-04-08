@@ -25,7 +25,7 @@ edition = "2021"
 
 [workspace.dependencies]
 rhiaqey-sdk-rs = { git = "https://github.com/rhiaqey/sdk-rs.git" }
-rhiaqey-common = { git = "https://github.com/rhiaqey/common.git", features = ["reqwest", "rss", "quick-xml"] }
+rhiaqey-common = { git = "https://github.com/rhiaqey/common.git" }
 tokio = { version = "1.37", features = ["full", "rt", "rt-multi-thread"] }
 serde = { version = "1.0", features = ["derive"] }
 serde_json = { version = "1.0" }
