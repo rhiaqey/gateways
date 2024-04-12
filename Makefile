@@ -60,7 +60,7 @@ export PRIVATE_KEY
 ws1:
 	ID=ws1 \
 	NAME=ws-1 \
-		cargo run --bin websocket --features=websocket
+		cargo run --bin websocket --features websocket
 
 .PHONY: build
 build: dev

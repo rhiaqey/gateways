@@ -20,7 +20,7 @@ RUN case "${TARGETPLATFORM}" in \
       *) echo "Unsupported platform: ${TARGETPLATFORM}" ; exit 1 ;; \
     esac \
     && rustup target add ${rust_target} \
-    && cargo install --target ${rust_target} --bin ${BINARY} --all-features --path .
+    && cargo install --target ${rust_target} --bin ${BINARY} --features ${BINARY} --path .
 
 FROM --platform=$BUILDPLATFORM rhiaqey/run:1.0.0
 

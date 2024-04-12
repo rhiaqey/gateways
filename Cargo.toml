@@ -35,8 +35,8 @@ log = { version = "0.4" }
 [dependencies]
 rhiaqey-sdk-rs = { workspace = true }
 rhiaqey-common = { workspace = true }
-rhiaqey-gateway-ws = { path = "lib/websocket" }
-rhiaqey-gateway-gtfs = { path = "lib/gtfs" }
+rhiaqey-gateway-ws = { path = "lib/websocket", optional = true }
+rhiaqey-gateway-gtfs = { path = "lib/gtfs", optional = true }
 tokio = { workspace = true }
 serde = { workspace = true }
 serde_json = { workspace = true }
@@ -51,6 +51,10 @@ axum = { version = "0.7", features = ["http2", "json", "macros",
 hyper = { version = "1.2", features = ["full"] }
 openssl = { version = "0.10", features = ["vendored"] }
 
+[features]
+websocket = ["rhiaqey-gateway-ws"]
+
 [[bin]]
 name = "websocket"
 src = "src/bin/websocket.rs"
+required-features = ["websocket"]
