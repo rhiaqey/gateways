@@ -1,8 +1,11 @@
+use axum::extract::State;
 use axum::http::StatusCode;
 use axum::response::IntoResponse;
-use axum::routing::get;
-use axum::Router;
-use log::{debug, info};
+use axum::routing::{get, post};
+use axum::{Json, Router};
+use axum_client_ip::InsecureClientIp;
+use axum_extra::{headers, TypedHeader};
+use log::{debug, info, warn};
 use rhiaqey_sdk_rs::gateway::{Gateway, GatewayConfig, GatewayMessage, GatewayMessageReceiver};
 use rhiaqey_sdk_rs::settings::Settings;
 use serde::{Deserialize, Serialize};
@@ -19,8 +22,64 @@ pub struct HTTP {
     config: Arc<Mutex<GatewayConfig>>,
 }
 
+#[derive(Debug)]
+struct HTTPState {
+    sender: Option<UnboundedSender<GatewayMessage>>,
+    settings: Arc<Mutex<HTTPSettings>>,
+}
 async fn get_home() -> impl IntoResponse {
     (StatusCode::OK, "OK")
+}
+
+fn user_ip_allowed(ip: &str, allowed_ips: Vec<String>) -> bool {
+    if cfg!(debug_assertions) {
+        return true;
+    }
+
+    let Some(found) = allowed_ips
+        .into_iter()
+        .find(|allowed_ip| allowed_ip.eq(&ip))
+    else {
+        warn!("user ip {:?} is not allowed", ip);
+        return false;
+    };
+
+    debug!("user ip {:?} is allowed", found);
+
+    true
+}
+
+async fn http_handler(
+    // headers: HeaderMap,
+    insecure_ip: InsecureClientIp,
+    user_agent: Option<TypedHeader<headers::UserAgent>>,
+    State(state): State<Arc<HTTPState>>,
+    Json(payload): Json<GatewayMessage>,
+) -> impl IntoResponse {
+    info!("[GET] Handle http connection");
+
+    let user_agent = if let Some(TypedHeader(user_agent)) = user_agent {
+        user_agent.to_string()
+    } else {
+        String::from("Unknown browser")
+    };
+
+    let ip = insecure_ip.0.to_string();
+    debug!("`{}` at {} connected.", user_agent, ip);
+
+    let statx = state.clone();
+    let sx = state.sender.clone().unwrap();
+    let settings = statx.settings.lock().await;
+    let whitelisted_ips = settings.whitelisted_ips.clone();
+
+    if !user_ip_allowed(&ip, whitelisted_ips) {
+        return (StatusCode::FORBIDDEN, "Unauthorized access").into_response();
+    }
+
+    sx.send(payload)
+        .expect("could not send gateway message upstream");
+
+    (StatusCode::ACCEPTED, "").into_response()
 }
 
 impl Gateway<HTTPSettings> for HTTP {
@@ -58,10 +117,16 @@ impl Gateway<HTTPSettings> for HTTP {
             let config = config.lock().await;
             let settings = Arc::clone(&settings);
 
+            let shared_state = Arc::new(HTTPState {
+                sender: Some(sender),
+                settings,
+            });
+
             let app = Router::new()
                 .route("/", get(get_home))
-                // .with_state(shared_state);
-                ;
+                .route("/http", post(http_handler))
+                .route("/rest", post(http_handler))
+                .with_state(shared_state);
 
             let host = config.host.clone().unwrap_or(String::from("0.0.0.0"));
             let addr = SocketAddr::from((host.parse::<IpAddr>().unwrap(), config.port));
@@ -109,12 +174,15 @@ impl Gateway<HTTPSettings> for HTTP {
 
 #[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct HTTPSettings {
-    //
+    #[serde(alias = "WhitelistedIPs")]
+    pub whitelisted_ips: Vec<String>,
 }
 
 impl Default for HTTPSettings {
     fn default() -> Self {
-        HTTPSettings {}
+        HTTPSettings {
+            whitelisted_ips: vec![],
+        }
     }
 }
 

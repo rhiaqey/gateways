@@ -224,6 +224,7 @@ impl Gateway<WebSocketSettings> for WebSocket {
 
             let app = Router::new()
                 .route("/", get(get_home))
+                .route("/ws", get(ws_handler))
                 .route("/websocket", get(ws_handler))
                 .with_state(shared_state);
 
