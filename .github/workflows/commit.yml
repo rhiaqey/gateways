@@ -37,7 +37,8 @@ jobs:
     strategy:
       matrix:
         gateways: [
-          {image: "rhiaqey/websocket", binary: "websocket", features: "websocket"}
+          { image: "rhiaqey/http", binary: "http" },
+          { image: "rhiaqey/websocket", binary: "websocket" }
         ]
     steps:
       - name: Checkout

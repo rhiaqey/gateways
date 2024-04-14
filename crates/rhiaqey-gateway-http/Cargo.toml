@@ -1,0 +1,28 @@
+[package]
+name = "rhiaqey-gateway-http"
+version.workspace = true
+edition.workspace = true
+
+[badges]
+maintenance = { status = "experimental" }
+
+[lib]
+# https://doc.rust-lang.org/reference/linkage.html
+crate-type = ["lib", "cdylib"]
+
+[dependencies]
+rhiaqey-sdk-rs = { workspace = true }
+rhiaqey-common = { workspace = true }
+tokio = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true }
+env_logger = { workspace = true }
+log = { workspace = true }
+futures = { version = "0.3" }
+lazy_static = { version = "1.4" }
+prometheus = { version = "0.13", features = ["process"] }
+axum = { version = "0.7", features = ["http2", "json", "macros",
+    "original-uri", "tokio", "ws", "form", "query", "matched-path", "multipart"] }
+axum-extra = { version = "0.9", features = ["typed-header", "cookie"] }
+axum-client-ip = { version = "0.6" }
+hyper = { version = "1.2", features = ["full"] }

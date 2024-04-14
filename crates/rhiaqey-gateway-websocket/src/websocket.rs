@@ -231,6 +231,8 @@ impl Gateway<WebSocketSettings> for WebSocket {
             let addr = SocketAddr::from((host.parse::<IpAddr>().unwrap(), config.port));
             let listener = tokio::net::TcpListener::bind(&addr).await.unwrap();
 
+            debug!("running at http://{host}:{}", config.port);
+
             axum::serve(
                 listener,
                 // app.into_make_service()
@@ -268,6 +270,6 @@ impl Gateway<WebSocketSettings> for WebSocket {
     }
 
     fn kind() -> String {
-        "websocket".to_string()
+        String::from("websocket")
     }
 }

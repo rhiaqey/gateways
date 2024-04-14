@@ -62,6 +62,12 @@ ws1:
 	NAME=ws-1 \
 		cargo run --bin websocket --features websocket
 
+.PHONY: http1
+http1:
+	ID=http1 \
+	NAME=http-1 \
+		cargo run --bin http --features http
+
 .PHONY: build
 build: dev
 

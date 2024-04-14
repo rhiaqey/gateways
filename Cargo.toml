@@ -17,7 +17,11 @@ panic = "abort"
 codegen-units = 1
 
 [workspace]
-members = ["lib/gtfs", "lib/websocket"]
+members = [
+    "crates/rhiaqey-gateway-http",
+    "crates/rhiaqey-gateway-gtfs",
+    "crates/rhiaqey-gateway-websocket"
+]
 
 [workspace.package]
 version = "0.1.63"
@@ -35,8 +39,9 @@ log = { version = "0.4" }
 [dependencies]
 rhiaqey-sdk-rs = { workspace = true }
 rhiaqey-common = { workspace = true }
-rhiaqey-gateway-ws = { path = "lib/websocket", optional = true }
-rhiaqey-gateway-gtfs = { path = "lib/gtfs", optional = true }
+rhiaqey-gateway-http = { path = "crates/rhiaqey-gateway-http", optional = true }
+rhiaqey-gateway-gtfs = { path = "crates/rhiaqey-gateway-gtfs", optional = true }
+rhiaqey-gateway-ws = { path = "crates/rhiaqey-gateway-websocket", optional = true }
 tokio = { workspace = true }
 serde = { workspace = true }
 serde_json = { workspace = true }
@@ -52,10 +57,16 @@ hyper = { version = "1.2", features = ["full"] }
 openssl = { version = "0.10", features = ["vendored"] }
 
 [features]
-websocket = ["rhiaqey-gateway-ws"]
+http = ["rhiaqey-gateway-http"]
 gtfs = ["rhiaqey-gateway-gtfs"]
+websocket = ["rhiaqey-gateway-ws"]
 
 [[bin]]
 name = "websocket"
 src = "src/bin/websocket.rs"
 required-features = ["websocket"]
+
+[[bin]]
+name = "http"
+src = "src/bin/http.rs"
+required-features = ["http"]

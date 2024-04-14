@@ -38,6 +38,7 @@ jobs:
     strategy:
       matrix:
         gateways: [
+          { image: "rhiaqey/http", binary: "http" },
           { image: "rhiaqey/websocket", binary: "websocket" }
         ]
     steps:

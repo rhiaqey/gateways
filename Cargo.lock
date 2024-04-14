@@ -1557,6 +1557,26 @@ dependencies = [
 ]
 
 [[package]]
+name = "rhiaqey-gateway-http"
+version = "0.1.63"
+dependencies = [
+ "axum",
+ "axum-client-ip",
+ "axum-extra",
+ "env_logger",
+ "futures",
+ "hyper",
+ "lazy_static",
+ "log",
+ "prometheus",
+ "rhiaqey-common",
+ "rhiaqey-sdk-rs",
+ "serde",
+ "serde_json",
+ "tokio",
+]
+
+[[package]]
 name = "rhiaqey-gateway-ws"
 version = "0.1.63"
 dependencies = [
@@ -1590,6 +1610,7 @@ dependencies = [
  "prometheus",
  "rhiaqey-common",
  "rhiaqey-gateway-gtfs",
+ "rhiaqey-gateway-http",
  "rhiaqey-gateway-ws",
  "rhiaqey-sdk-rs",
  "rustis",
