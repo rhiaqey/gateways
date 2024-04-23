@@ -1531,7 +1531,7 @@ dependencies = [
  "rhiaqey-sdk-rs",
  "rmp-serde",
  "rsa",
- "rustis",
+ "rustis 0.12.11",
  "rusty_ulid",
  "serde",
  "serde_json",
@@ -1613,7 +1613,7 @@ dependencies = [
  "rhiaqey-gateway-http",
  "rhiaqey-gateway-ws",
  "rhiaqey-sdk-rs",
- "rustis",
+ "rustis 0.13.1",
  "serde",
  "serde_json",
  "tokio",
@@ -1698,6 +1698,31 @@ dependencies = [
  "serde",
  "smallvec",
  "socket2 0.4.10",
+ "tokio",
+ "tokio-util",
+ "url",
+]
+
+[[package]]
+name = "rustis"
+version = "0.13.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "5b0d03b19bc05556a010b5607944207d8bb7a3c0f9dd4ec36933896c8c706cc7"
+dependencies = [
+ "atoi",
+ "bytes",
+ "crc16",
+ "dtoa",
+ "fast-float",
+ "futures-channel",
+ "futures-util",
+ "itoa",
+ "log",
+ "memchr",
+ "rand",
+ "serde",
+ "smallvec",
+ "socket2 0.5.6",
  "tokio",
  "tokio-util",
  "url",
