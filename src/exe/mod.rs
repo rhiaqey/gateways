@@ -12,6 +12,7 @@ use rhiaqey_common::pubsub::{
 use rhiaqey_sdk_rs::gateway::{Gateway, GatewayConfig};
 use rhiaqey_sdk_rs::settings::Settings;
 use serde_json::json;
+use tokio::signal;
 use std::time::Duration;
 
 use crate::exe::metrics::TOTAL_CHANNELS;
@@ -102,6 +103,10 @@ pub async fn run<P: Gateway<S> + Send + 'static, S: Settings>() {
                 .expect("failed to send metrics");
 
                 trace!("metrics sent");
+            },            
+            Ok(result) = signal::ctrl_c() => {
+                trace!("signal caught: {:?}", result);
+                break;
             },
             Some(message) = publisher_stream.recv() => {
                 trace!("message received from plugin: {:?}", message);
@@ -141,4 +146,5 @@ pub async fn run<P: Gateway<S> + Send + 'static, S: Settings>() {
             }
         }
     }
+    info!("shutting down");
 }
