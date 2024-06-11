@@ -59,7 +59,7 @@ export PRIVATE_KEY
 .PHONY: ws1
 ws1:
 	ID=ws1 \
-	NAME=ws-1 \
+	NAME=ws1 \
 		cargo run --bin websocket --features websocket
 
 .PHONY: http1
