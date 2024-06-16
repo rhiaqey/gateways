@@ -1613,9 +1613,9 @@ dependencies = [
 
 [[package]]
 name = "redox_syscall"
-version = "0.5.1"
+version = "0.5.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "469052894dcb553421e483e4209ee581a45100d31b4018de03e5a7ad86374a7e"
+checksum = "c82cf8cff14456045f55ec4241383baeff27af886adb72ffb2162f99911de0fd"
 dependencies = [
  "bitflags",
 ]
@@ -1652,7 +1652,7 @@ checksum = "7a66a03ae7c801facd77a29370b4faec201768915ac14a721ba36f20bc9c209b"
 [[package]]
 name = "rhiaqey-common"
 version = "0.2.0"
-source = "git+https://github.com/rhiaqey/common.git#e7da9bed7d3ace1f9b990ea4d6c8275430b5ab7b"
+source = "git+https://github.com/rhiaqey/common.git#189b45ece10d662d58f19496182f22bbcfcd868d"
 dependencies = [
  "aes-gcm-siv",
  "anyhow",
