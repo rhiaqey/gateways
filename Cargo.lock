@@ -1539,7 +1539,7 @@ dependencies = [
 
 [[package]]
 name = "rhiaqey-gateway-gtfs"
-version = "0.1.98"
+version = "0.1.99"
 dependencies = [
  "env_logger",
  "log",
@@ -1556,7 +1556,7 @@ dependencies = [
 
 [[package]]
 name = "rhiaqey-gateway-http"
-version = "0.1.98"
+version = "0.1.99"
 dependencies = [
  "axum",
  "axum-client-ip",
@@ -1575,7 +1575,7 @@ dependencies = [
 
 [[package]]
 name = "rhiaqey-gateway-ws"
-version = "0.1.98"
+version = "0.1.99"
 dependencies = [
  "axum",
  "axum-client-ip",
@@ -1594,7 +1594,7 @@ dependencies = [
 
 [[package]]
 name = "rhiaqey-gateways"
-version = "0.1.98"
+version = "0.1.99"
 dependencies = [
  "axum",
  "env_logger",
@@ -1617,7 +1617,7 @@ dependencies = [
 [[package]]
 name = "rhiaqey-sdk-rs"
 version = "0.1.1"
-source = "git+https://github.com/rhiaqey/sdk-rs.git#4acb87f49b9a2d09e916411c7803fecf3b117ee1"
+source = "git+https://github.com/rhiaqey/sdk-rs.git#612ba4854fcfecd5a480a6617b1697fd8536c089"
 dependencies = [
  "serde",
  "serde_bytes",
