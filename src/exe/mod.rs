@@ -15,13 +15,13 @@ use serde_json::json;
 use std::time::Duration;
 use tokio::signal;
 
-use crate::exe::metrics::TOTAL_CHANNELS;
+use crate::exe::metrics::{init_metrics, TOTAL_CHANNELS};
 
 pub async fn run<P: Gateway<S> + Send + 'static, S: Settings>() {
     env_logger::init();
     let env = parse_env();
 
-    let mut executor = match Executor::setup(env).await {
+    let mut executor = match Executor::setup(env.clone()).await {
         Ok(exec) => exec,
         Err(error) => {
             panic!("failed to setup executor: {error}");
@@ -40,6 +40,8 @@ pub async fn run<P: Gateway<S> + Send + 'static, S: Settings>() {
         .read_settings_async::<S>()
         .await
         .unwrap_or(S::default());
+
+    init_metrics(&env, P::kind()).await;
 
     let config = GatewayConfig {
         id: None,
@@ -82,7 +84,7 @@ pub async fn run<P: Gateway<S> + Send + 'static, S: Settings>() {
         .unwrap();
 
     let channel_count = executor.get_channel_count_async().await as f64;
-    TOTAL_CHANNELS.set(channel_count);
+    TOTAL_CHANNELS.get().unwrap().set(channel_count);
     trace!("channel count is {channel_count}");
 
     info!("ready, set, go...");
@@ -90,6 +92,7 @@ pub async fn run<P: Gateway<S> + Send + 'static, S: Settings>() {
     loop {
         tokio::select! {
             _ = interval.tick() => {
+                let total_channels = TOTAL_CHANNELS.get().unwrap().get();
                 executor.rpc(executor.get_namespace(), RPCMessage {
                     data: RPCMessageData::Metrics(MetricsMessage {
                         id: executor.get_id(),
@@ -97,7 +100,7 @@ pub async fn run<P: Gateway<S> + Send + 'static, S: Settings>() {
                         namespace: executor.get_namespace(),
                         metrics: json!({
                             "common": {
-                                "total_channels": TOTAL_CHANNELS.get()
+                                "total_channels": total_channels
                             },
                             "gateway": plugin.metrics().await
                         })
@@ -127,7 +130,7 @@ pub async fn run<P: Gateway<S> + Send + 'static, S: Settings>() {
                                 debug!("received assign channels rpc {:?}", channels);
                                 let channel_count = channels.len() as f64;
                                 executor.set_channels_async(channels).await;
-                                TOTAL_CHANNELS.set(channel_count);
+                                TOTAL_CHANNELS.get().unwrap().set(channel_count);
                                 info!("total channels assigned to {channel_count}");
                             }
                             RPCMessageData::UpdatePublisherSettings() => {
