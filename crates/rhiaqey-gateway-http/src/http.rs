@@ -83,7 +83,7 @@ async fn http_handler(
 }
 
 impl Gateway<HTTPSettings> for HTTP {
-    fn setup(
+    async fn setup(
         &mut self,
         config: GatewayConfig,
         settings: Option<HTTPSettings>,

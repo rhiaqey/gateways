@@ -183,7 +183,7 @@ async fn handle_ws_connection(socket: WebSocketConn, who: String, state: Arc<Web
 }
 
 impl Gateway<WebSocketSettings> for WebSocket {
-    fn setup(
+    async fn setup(
         &mut self,
         config: GatewayConfig,
         settings: Option<WebSocketSettings>,
