@@ -18,7 +18,6 @@ serde = { workspace = true }
 serde_json = { workspace = true }
 env_logger = { workspace = true }
 log = { workspace = true }
-lazy_static = { workspace = true }
 hyper = { workspace = true }
 futures = { version = "0.3" }
 prometheus = { version = "0.13", features = ["process"] }

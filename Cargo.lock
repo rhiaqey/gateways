@@ -1564,7 +1564,6 @@ dependencies = [
  "env_logger",
  "futures",
  "hyper",
- "lazy_static",
  "log",
  "prometheus",
  "rhiaqey-common",
@@ -1584,7 +1583,6 @@ dependencies = [
  "env_logger",
  "futures",
  "hyper",
- "lazy_static",
  "log",
  "prometheus",
  "rhiaqey-common",
@@ -1602,7 +1600,6 @@ dependencies = [
  "env_logger",
  "futures",
  "hyper",
- "lazy_static",
  "log",
  "openssl",
  "prometheus",
@@ -1620,7 +1617,7 @@ dependencies = [
 [[package]]
 name = "rhiaqey-sdk-rs"
 version = "0.1.1"
-source = "git+https://github.com/rhiaqey/sdk-rs.git#fdd3bd4db217f883149916b36282d6e4fe5e7492"
+source = "git+https://github.com/rhiaqey/sdk-rs.git#4acb87f49b9a2d09e916411c7803fecf3b117ee1"
 dependencies = [
  "serde",
  "serde_bytes",

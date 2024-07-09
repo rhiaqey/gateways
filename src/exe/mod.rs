@@ -44,9 +44,9 @@ pub async fn run<P: Gateway<S> + Send + 'static, S: Settings>() {
     init_metrics(&env, P::kind()).await;
 
     let config = GatewayConfig {
-        id: None,
-        name: None,
-        namespace: None,
+        id: Some(executor.get_id()),
+        name: Some(executor.get_name()),
+        namespace: Some(executor.get_namespace()),
         port: executor.get_public_port(),
         host: None,
     };

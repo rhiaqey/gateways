@@ -9,23 +9,19 @@ use axum_extra::headers;
 use axum_extra::TypedHeader;
 use futures::StreamExt;
 use hyper::http::StatusCode;
-use lazy_static::lazy_static;
 use log::{debug, info, warn};
-use prometheus::{register_gauge, Gauge};
+use prometheus::{labels, opts, register_gauge, Gauge};
 use rhiaqey_sdk_rs::gateway::{Gateway, GatewayConfig, GatewayMessage, GatewayMessageReceiver};
 use rhiaqey_sdk_rs::settings::Settings;
 use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
+use std::collections::HashMap;
 use std::net::{IpAddr, SocketAddr};
 use std::sync::Arc;
 use tokio::sync::mpsc::{unbounded_channel, UnboundedSender};
-use tokio::sync::Mutex;
+use tokio::sync::{Mutex, OnceCell};
 
-lazy_static! {
-    static ref TOTAL_CONNECTIONS: Gauge =
-        register_gauge!("total_connections", "Total number of active connections.",)
-            .expect("cannot create gauge metric for channels");
-}
+pub static TOTAL_CONNECTIONS: OnceCell<Gauge> = OnceCell::const_new();
 
 #[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct WebSocketSettings {
@@ -171,7 +167,7 @@ async fn handle_ws_connection(socket: WebSocketConn, who: String, state: Arc<Web
                         warn!("{} somehow sent close message without CloseFrame", who);
                     }
 
-                    TOTAL_CONNECTIONS.dec();
+                    TOTAL_CONNECTIONS.get().unwrap().dec();
 
                     break 'outer;
                 }
@@ -179,12 +175,39 @@ async fn handle_ws_connection(socket: WebSocketConn, who: String, state: Arc<Web
         }
     });
 
-    TOTAL_CONNECTIONS.inc();
+    TOTAL_CONNECTIONS.get().unwrap().inc();
 }
 
 impl WebSocket {
-    async fn init_metrics(&self, _config: &GatewayConfig) {
-        //
+    async fn init_metrics(&self, config: &GatewayConfig) {
+        let kind = Self::kind();
+        let mut values: HashMap<&str, &str> = labels! {};
+        if let Some(id) = &config.id {
+            values.insert("id", id.as_str());
+        }
+
+        if let Some(name) = &config.name {
+            values.insert("name", name.as_str());
+        }
+
+        if let Some(namespace) = &config.namespace {
+            values.insert("namespace", namespace.as_str());
+        }
+
+        values.insert("kind", kind.as_str());
+
+        TOTAL_CONNECTIONS
+            .get_or_init(|| async {
+                register_gauge!(opts!(
+                    "rq_total_connections",
+                    "Total number of active connections.",
+                    values
+                ))
+                .unwrap()
+            })
+            .await;
+
+        info!("websocket metrics are ready");
     }
 }
 
@@ -272,7 +295,7 @@ impl Gateway<WebSocketSettings> for WebSocket {
     }
 
     async fn metrics(&self) -> Value {
-        let total = TOTAL_CONNECTIONS.get();
+        let total = TOTAL_CONNECTIONS.get().unwrap().get();
         json!({
             "connections": total
         })
