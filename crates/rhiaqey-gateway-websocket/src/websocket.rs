@@ -182,6 +182,12 @@ async fn handle_ws_connection(socket: WebSocketConn, who: String, state: Arc<Web
     TOTAL_CONNECTIONS.inc();
 }
 
+impl WebSocket {
+    async fn init_metrics(&self, _config: &GatewayConfig) {
+        //
+    }
+}
+
 impl Gateway<WebSocketSettings> for WebSocket {
     async fn setup(
         &mut self,
@@ -189,6 +195,8 @@ impl Gateway<WebSocketSettings> for WebSocket {
         settings: Option<WebSocketSettings>,
     ) -> GatewayMessageReceiver {
         info!("setting up {}", Self::kind());
+
+        self.init_metrics(&config).await;
 
         self.config = Arc::new(Mutex::new(config));
 
