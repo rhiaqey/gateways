@@ -19,8 +19,8 @@ serde_json = { workspace = true }
 env_logger = { workspace = true }
 log = { workspace = true }
 protobuf = { version = "3.5", features = ["bytes"] }
-prost = "0.12"
-prost-types = "0.12"
+prost = "0.13"
+prost-types = "0.13"
 
 [build-dependencies]
-prost-build = { version = "0.12" }
+prost-build = { version = "0.13" }
