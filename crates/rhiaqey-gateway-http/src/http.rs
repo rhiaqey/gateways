@@ -163,10 +163,6 @@ impl Gateway<HTTPSettings> for HTTP {
         })
     }
 
-    async fn metrics(&self) -> Value {
-        json!({})
-    }
-
     fn kind() -> String {
         String::from("http")
     }

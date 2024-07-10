@@ -294,13 +294,6 @@ impl Gateway<WebSocketSettings> for WebSocket {
         })
     }
 
-    async fn metrics(&self) -> Value {
-        let total = TOTAL_CONNECTIONS.get().unwrap().get();
-        json!({
-            "connections": total
-        })
-    }
-
     fn kind() -> String {
         String::from("websocket")
     }

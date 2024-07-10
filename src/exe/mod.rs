@@ -6,13 +6,9 @@ use futures::StreamExt;
 use log::{debug, info, trace, warn};
 use rhiaqey_common::env::parse_env;
 use rhiaqey_common::executor::{Executor, ExecutorPublishOptions};
-use rhiaqey_common::pubsub::{
-    MetricsMessage, PublisherRegistrationMessage, RPCMessage, RPCMessageData,
-};
+use rhiaqey_common::pubsub::{PublisherRegistrationMessage, RPCMessage, RPCMessageData};
 use rhiaqey_sdk_rs::gateway::{Gateway, GatewayConfig};
 use rhiaqey_sdk_rs::settings::Settings;
-use serde_json::json;
-use std::time::Duration;
 use tokio::signal;
 
 use crate::exe::metrics::{init_metrics, TOTAL_CHANNELS};
@@ -75,9 +71,6 @@ pub async fn run<P: Gateway<S> + Send + 'static, S: Settings>() {
 
     tokio::spawn(start_private_http_server(port));
 
-    let mut interval = tokio::time::interval(Duration::from_secs(10));
-    trace!("interval ready");
-
     let mut pubsub_stream = executor
         .create_hub_to_publishers_pubsub_async()
         .await
@@ -91,25 +84,6 @@ pub async fn run<P: Gateway<S> + Send + 'static, S: Settings>() {
 
     loop {
         tokio::select! {
-            _ = interval.tick() => {
-                let total_channels = TOTAL_CHANNELS.get().unwrap().get();
-                executor.rpc(executor.get_namespace(), RPCMessage {
-                    data: RPCMessageData::Metrics(MetricsMessage {
-                        id: executor.get_id(),
-                        name: executor.get_name(),
-                        namespace: executor.get_namespace(),
-                        metrics: json!({
-                            "common": {
-                                "total_channels": total_channels
-                            },
-                            "gateway": plugin.metrics().await
-                        })
-                    }),
-                })
-                .expect("failed to send metrics");
-
-                trace!("metrics sent");
-            },
             Ok(result) = signal::ctrl_c() => {
                 trace!("signal caught: {:?}", result);
                 break;

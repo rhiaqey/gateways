@@ -882,9 +882,9 @@ checksum = "f8478577c03552c21db0e2724ffb8986a5ce7af88107e6be5d2ee6e158c12800"
 
 [[package]]
 name = "itertools"
-version = "0.12.1"
+version = "0.13.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ba291022dbbd398a455acf126c1e341954079855bc60dfdda641363bd6922569"
+checksum = "413ee7dfc52ee1a4949ceeb7dbc8a33f2d6c088194d9f922fb8318faf1f01186"
 dependencies = [
  "either",
 ]
@@ -1515,7 +1515,7 @@ checksum = "7a66a03ae7c801facd77a29370b4faec201768915ac14a721ba36f20bc9c209b"
 [[package]]
 name = "rhiaqey-common"
 version = "0.2.1"
-source = "git+https://github.com/rhiaqey/common.git#a2add744d768ea99380df1bcc2aa3d16d8b6c69a"
+source = "git+https://github.com/rhiaqey/common.git#59f784d8778466ff810d816cefd8aacaf27b6698"
 dependencies = [
  "aes-gcm-siv",
  "anyhow",
@@ -1617,7 +1617,7 @@ dependencies = [
 [[package]]
 name = "rhiaqey-sdk-rs"
 version = "0.1.1"
-source = "git+https://github.com/rhiaqey/sdk-rs.git#612ba4854fcfecd5a480a6617b1697fd8536c089"
+source = "git+https://github.com/rhiaqey/sdk-rs.git#0370ab065325405c84e3c5382d67122bd683b0a7"
 dependencies = [
  "serde",
  "serde_bytes",
