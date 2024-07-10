@@ -194,6 +194,10 @@ impl WebSocket {
             values.insert("namespace", namespace.as_str());
         }
 
+        if let Some(organization) = &config.organization {
+            values.insert("org", organization.as_str());
+        }
+
         values.insert("kind", kind.as_str());
 
         TOTAL_CONNECTIONS

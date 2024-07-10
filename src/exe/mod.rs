@@ -43,6 +43,7 @@ pub async fn run<P: Gateway<S> + Send + 'static, S: Settings>() {
         id: Some(executor.get_id()),
         name: Some(executor.get_name()),
         namespace: Some(executor.get_namespace()),
+        organization: Some(executor.get_organization().to_string()),
         port: executor.get_public_port(),
         host: None,
     };
