@@ -11,7 +11,7 @@ use rhiaqey_sdk_rs::gateway::{Gateway, GatewayConfig};
 use rhiaqey_sdk_rs::settings::Settings;
 use tokio::signal;
 
-use crate::exe::metrics::{init_metrics, TOTAL_CHANNELS};
+use crate::exe::metrics::{init_metrics, TOTAL_CHANNELS, UP_INDICATOR};
 
 pub async fn run<P: Gateway<S> + Send + 'static, S: Settings>() {
     env_logger::init();
@@ -80,6 +80,8 @@ pub async fn run<P: Gateway<S> + Send + 'static, S: Settings>() {
     let channel_count = executor.get_channel_count_async().await as f64;
     TOTAL_CHANNELS.get().unwrap().set(channel_count);
     trace!("channel count is {channel_count}");
+
+    UP_INDICATOR.get().unwrap().set(1.0);
 
     info!("ready, set, go...");
 
