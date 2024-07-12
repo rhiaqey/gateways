@@ -120,6 +120,8 @@ async fn handle_ws_connection(socket: WebSocketConn, who: String, state: Arc<Web
     let (_, mut receiver) = socket.split();
 
     tokio::task::spawn(async move {
+        TOTAL_CONNECTIONS.get().unwrap().inc();
+
         'outer: while let Some(Ok(msg)) = receiver.next().await {
             debug!("received message {:?}", msg);
 
@@ -167,15 +169,13 @@ async fn handle_ws_connection(socket: WebSocketConn, who: String, state: Arc<Web
                         warn!("{} somehow sent close message without CloseFrame", who);
                     }
 
-                    TOTAL_CONNECTIONS.get().unwrap().dec();
-
                     break 'outer;
                 }
             }
         }
-    });
 
-    TOTAL_CONNECTIONS.get().unwrap().inc();
+        TOTAL_CONNECTIONS.get().unwrap().dec();
+    });
 }
 
 impl WebSocket {
