@@ -10,7 +10,7 @@ use axum_extra::TypedHeader;
 use futures::StreamExt;
 use hyper::http::StatusCode;
 use log::{debug, info, warn};
-use prometheus::{labels, opts, register_gauge, Gauge};
+use prometheus::{labels, opts, register_int_gauge, IntGauge};
 use rhiaqey_sdk_rs::gateway::{Gateway, GatewayConfig, GatewayMessage, GatewayMessageReceiver};
 use rhiaqey_sdk_rs::settings::Settings;
 use serde::{Deserialize, Serialize};
@@ -21,7 +21,7 @@ use std::sync::Arc;
 use tokio::sync::mpsc::{unbounded_channel, UnboundedSender};
 use tokio::sync::{Mutex, OnceCell};
 
-pub static TOTAL_CONNECTIONS: OnceCell<Gauge> = OnceCell::const_new();
+pub static TOTAL_CONNECTIONS: OnceCell<IntGauge> = OnceCell::const_new();
 
 #[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct WebSocketSettings {
@@ -202,7 +202,7 @@ impl WebSocket {
 
         TOTAL_CONNECTIONS
             .get_or_init(|| async {
-                register_gauge!(opts!(
+                register_int_gauge!(opts!(
                     "rq_total_connections",
                     "Total number of active connections.",
                     values

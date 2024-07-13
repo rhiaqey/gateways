@@ -77,11 +77,11 @@ pub async fn run<P: Gateway<S> + Send + 'static, S: Settings>() {
         .await
         .unwrap();
 
-    let channel_count = executor.get_channel_count_async().await as f64;
+    let channel_count = executor.get_channel_count_async().await as i64;
     TOTAL_CHANNELS.get().unwrap().set(channel_count);
     trace!("channel count is {channel_count}");
 
-    UP_INDICATOR.get().unwrap().set(1.0);
+    UP_INDICATOR.get().unwrap().set(1);
 
     info!("ready, set, go...");
 
@@ -105,7 +105,7 @@ pub async fn run<P: Gateway<S> + Send + 'static, S: Settings>() {
                         match rpc_message.data {
                             RPCMessageData::AssignChannels(channels) => {
                                 debug!("received assign channels rpc {:?}", channels);
-                                let channel_count = channels.len() as f64;
+                                let channel_count = channels.len() as i64;
                                 executor.set_channels_async(channels).await;
                                 TOTAL_CHANNELS.get().unwrap().set(channel_count);
                                 info!("total channels assigned to {channel_count}");
