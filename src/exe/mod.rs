@@ -11,7 +11,7 @@ use rhiaqey_sdk_rs::gateway::{Gateway, GatewayConfig};
 use rhiaqey_sdk_rs::settings::Settings;
 use tokio::signal;
 
-use crate::exe::metrics::{init_metrics, TOTAL_CHANNELS, UP_INDICATOR};
+use crate::exe::metrics::TOTAL_CHANNELS;
 
 pub async fn run<P: Gateway<S> + Send + 'static, S: Settings>() {
     env_logger::init();
@@ -36,8 +36,6 @@ pub async fn run<P: Gateway<S> + Send + 'static, S: Settings>() {
         .read_settings_async::<S>()
         .await
         .unwrap_or(S::default());
-
-    init_metrics(&env, P::kind()).await;
 
     let config = GatewayConfig {
         id: Some(executor.get_id()),
@@ -78,10 +76,8 @@ pub async fn run<P: Gateway<S> + Send + 'static, S: Settings>() {
         .unwrap();
 
     let channel_count = executor.get_channel_count_async().await as i64;
-    TOTAL_CHANNELS.get().unwrap().set(channel_count);
+    TOTAL_CHANNELS.set(channel_count);
     trace!("channel count is {channel_count}");
-
-    UP_INDICATOR.get().unwrap().set(1);
 
     info!("ready, set, go...");
 
@@ -107,7 +103,7 @@ pub async fn run<P: Gateway<S> + Send + 'static, S: Settings>() {
                                 debug!("received assign channels rpc {:?}", channels);
                                 let channel_count = channels.len() as i64;
                                 executor.set_channels_async(channels).await;
-                                TOTAL_CHANNELS.get().unwrap().set(channel_count);
+                                TOTAL_CHANNELS.set(channel_count);
                                 info!("total channels assigned to {channel_count}");
                             }
                             RPCMessageData::UpdatePublisherSettings() => {
