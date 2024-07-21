@@ -215,6 +215,8 @@ impl Gateway<WebSocketSettings> for WebSocket {
         let settings = self.settings.clone();
         let config = self.config.clone();
 
+        TOTAL_CONNECTIONS.set(0); // initialize metric here
+
         tokio::spawn(async move {
             let config = config.lock().await;
             let settings = Arc::clone(&settings);
