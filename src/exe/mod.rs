@@ -38,9 +38,9 @@ pub async fn run<P: Gateway<S> + Send + 'static, S: Settings>() {
         .unwrap_or(S::default());
 
     let config = GatewayConfig {
-        id: Some(executor.get_id()),
-        name: Some(executor.get_name()),
-        namespace: Some(executor.get_namespace()),
+        id: Some(executor.get_id().to_string()),
+        name: Some(executor.get_name().to_string()),
+        namespace: Some(executor.get_namespace().to_string()),
         organization: Some(executor.get_organization().to_string()),
         port: executor.get_public_port(),
         host: None,
@@ -53,15 +53,18 @@ pub async fn run<P: Gateway<S> + Send + 'static, S: Settings>() {
 
     let publisher_registration_message = RPCMessage {
         data: RPCMessageData::RegisterPublisher(PublisherRegistrationMessage {
-            id: executor.get_id(),
-            name: executor.get_name(),
-            namespace: executor.get_namespace(),
+            id: executor.get_id().to_string(),
+            name: executor.get_name().to_string(),
+            namespace: executor.get_namespace().to_string(),
             schema: P::schema(),
         }),
     };
 
     executor
-        .rpc(executor.get_namespace(), publisher_registration_message)
+        .rpc(
+            &executor.get_namespace().to_string(),
+            publisher_registration_message,
+        )
         .expect("publisher must first register with hub");
 
     debug!("rpc registration message sent");
