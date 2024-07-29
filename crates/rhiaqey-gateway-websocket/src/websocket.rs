@@ -18,6 +18,7 @@ use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
 use std::net::{IpAddr, SocketAddr};
 use std::sync::Arc;
+use std::time::Duration;
 use tokio::sync::mpsc::{unbounded_channel, UnboundedSender};
 use tokio::sync::Mutex;
 
@@ -134,9 +135,11 @@ async fn handle_ws_connection(socket: WebSocketConn, who: String, state: Arc<Web
             match msg {
                 Message::Ping(_) => {
                     // handled automatically by axum
+                    debug!("ping received");
                 }
                 Message::Pong(_) => {
                     // handled automatically by axum
+                    debug!("pong received");
                 }
                 Message::Text(txt) => match serde_json::from_str::<GatewayMessage>(txt.as_str()) {
                     Ok(gateway_message) => {
@@ -146,7 +149,7 @@ async fn handle_ws_connection(socket: WebSocketConn, who: String, state: Arc<Web
                             .expect("could not send gateway message upstream");
                     }
                     Err(error) => {
-                        warn!("error parsing gateway text message: {error}");
+                        warn!("error parsing gateway text message: {error} - {}", txt);
                     }
                 },
                 Message::Binary(raw) => {
@@ -216,6 +219,13 @@ impl Gateway<WebSocketSettings> for WebSocket {
         let config = self.config.clone();
 
         TOTAL_CONNECTIONS.set(0); // initialize metric here
+
+        tokio::spawn(async move {
+            loop {
+                info!("total active connection: {}", TOTAL_CONNECTIONS.get());
+                tokio::time::sleep(Duration::from_secs(60)).await;
+            }
+        });
 
         tokio::spawn(async move {
             let config = config.lock().await;
