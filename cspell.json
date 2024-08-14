@@ -4,16 +4,24 @@
     "dictionaryDefinitions": [],
     "dictionaries": [],
     "words": [
+        "Anson",
         "astros",
+        "azurecr",
+        "azuretools",
         "chrono",
-        "reqwest",
-        "rhiaqey",
+        "devcontainer",
+        "devcontainers",
+        "devwasm",
         "gtfs",
-        "statx",
+        "jungaretti",
         "prost",
         "proto",
+        "protoc",
         "protos",
-        "protoc"
+        "reqwest",
+        "rhiaqey",
+        "rustc",
+        "statx"
     ],
     "ignoreWords": [],
     "import": []
