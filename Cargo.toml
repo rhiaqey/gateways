@@ -51,7 +51,7 @@ env_logger = { workspace = true }
 log = { workspace = true }
 hyper = { workspace = true }
 lazy_static = { workspace = true }
-prometheus = { version = "0.13", features = ["process"] }
+prometheus = { version = "0.13" }
 futures = "0.3"
 rustis = { version = "0.13", features = ["redis-json", "tokio-runtime"] }
 axum = { version = "0.7", features = ["http2", "json", "macros",
