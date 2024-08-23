@@ -37,6 +37,7 @@ env_logger = { version = "0.11" }
 log = { version = "0.4" }
 hyper = { version = "1.4", features = ["full"] }
 lazy_static = "1.5"
+prometheus = { version = "0.13" }
 
 [dependencies]
 rhiaqey-sdk-rs = { workspace = true }
@@ -51,7 +52,7 @@ env_logger = { workspace = true }
 log = { workspace = true }
 hyper = { workspace = true }
 lazy_static = { workspace = true }
-prometheus = { version = "0.13" }
+prometheus = { workspace = true }
 futures = "0.3"
 rustis = { version = "0.13", features = ["redis-json", "tokio-runtime"] }
 axum = { version = "0.7", features = ["http2", "json", "macros",
