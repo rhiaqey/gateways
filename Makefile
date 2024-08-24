@@ -7,7 +7,7 @@ export REDIS_VERSION=7.4.0
 export REDIS_INSIGHT_VERSION=2.54.0
 
 export RUST_BACKTRACE=full
-export RUST_LOG=trace
+export RUST_LOG=rhiaqey=trace
 export DEBUG=true
 export PRIVATE_PORT=3010
 export PUBLIC_PORT=3011
