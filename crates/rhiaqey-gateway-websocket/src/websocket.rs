@@ -18,7 +18,6 @@ use serde::{Deserialize, Serialize};
 use serde_json::{json, Value};
 use std::net::{IpAddr, SocketAddr};
 use std::sync::Arc;
-use std::time::Duration;
 use tokio::sync::mpsc::{unbounded_channel, UnboundedSender};
 use tokio::sync::Mutex;
 
@@ -219,13 +218,6 @@ impl Gateway<WebSocketSettings> for WebSocket {
         let config = self.config.clone();
 
         TOTAL_CONNECTIONS.set(0); // initialize metric here
-
-        tokio::spawn(async move {
-            loop {
-                info!("total active connection: {}", TOTAL_CONNECTIONS.get());
-                tokio::time::sleep(Duration::from_secs(60)).await;
-            }
-        });
 
         tokio::spawn(async move {
             let config = config.lock().await;
