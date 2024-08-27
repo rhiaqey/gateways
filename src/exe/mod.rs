@@ -109,7 +109,7 @@ pub async fn run<P: Gateway<S> + Send + 'static, S: Settings>() {
                                 TOTAL_CHANNELS.set(channel_count);
                                 info!("total channels assigned to {channel_count}");
                             }
-                            RPCMessageData::UpdatePublisherSettings() => {
+                            RPCMessageData::UpdatePublisherSettings(_) => {
                                 debug!("received update settings rpc");
                                 match executor.read_settings_async::<S>().await {
                                     Ok(settings) => {
