@@ -23,8 +23,8 @@ use tokio::sync::Mutex;
 
 lazy_static! {
     pub(crate) static ref TOTAL_CONNECTIONS: IntGauge = register_int_gauge!(
-        "total_connections",
-        "Total number of active ws connections."
+        "total_gateway_websocket_connections",
+        "Total number of active websocket connections."
     )
     .unwrap();
 }
