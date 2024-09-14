@@ -1591,6 +1591,7 @@ dependencies = [
  "log",
  "openssl",
  "prometheus",
+ "redis",
  "rhiaqey-common",
  "rhiaqey-gateway-gtfs",
  "rhiaqey-gateway-http",
