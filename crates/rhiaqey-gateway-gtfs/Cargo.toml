@@ -19,7 +19,7 @@ serde_json = { workspace = true }
 env_logger = { workspace = true }
 log = { workspace = true }
 prometheus = { workspace = true }
-protobuf = { version = "3.5", features = ["bytes"] }
+protobuf = { version = "3.7", features = ["bytes"] }
 prost = "0.13"
 prost-types = "0.13"
 
