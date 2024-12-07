@@ -24,7 +24,7 @@ members = [
 ]
 
 [workspace.package]
-version = "0.1.167"
+version = "0.1.168"
 edition = "2021"
 
 [workspace.dependencies]
