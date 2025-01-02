@@ -235,17 +235,6 @@ dependencies = [
 
 [[package]]
 name = "axum-client-ip"
-version = "0.6.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "9eefda7e2b27e1bda4d6fa8a06b50803b8793769045918bc37ad062d48a6efac"
-dependencies = [
- "axum 0.7.9",
- "forwarded-header-value",
- "serde",
-]
-
-[[package]]
-name = "axum-client-ip"
 version = "0.7.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "dff8ee1869817523c8f91c20bf17fd932707f66c2e7e0b0f811b29a227289562"
@@ -1774,7 +1763,7 @@ name = "rhiaqey-gateway-http"
 version = "0.1.176"
 dependencies = [
  "axum 0.8.1",
- "axum-client-ip 0.7.0",
+ "axum-client-ip",
  "axum-extra 0.10.0",
  "env_logger",
  "futures",
@@ -1794,7 +1783,7 @@ name = "rhiaqey-gateway-ws"
 version = "0.1.176"
 dependencies = [
  "axum 0.7.9",
- "axum-client-ip 0.6.1",
+ "axum-client-ip",
  "axum-extra 0.9.6",
  "env_logger",
  "futures",
