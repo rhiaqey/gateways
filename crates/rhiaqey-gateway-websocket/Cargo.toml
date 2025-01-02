@@ -22,7 +22,7 @@ hyper = { workspace = true }
 lazy_static = { workspace = true }
 futures = { version = "0.3" }
 prometheus = { workspace = true }
-axum = { version = "0.7", features = ["http2", "json", "macros",
+axum = { version = "0.8", features = ["http2", "json", "macros",
     "original-uri", "tokio", "ws", "form", "query", "matched-path", "multipart"] }
 axum-extra = { version = "0.9", features = ["typed-header", "cookie"] }
 axum-client-ip = { version = "0.6" }
