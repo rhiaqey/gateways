@@ -1753,7 +1753,7 @@ dependencies = [
 
 [[package]]
 name = "rhiaqey-gateway-gtfs"
-version = "0.1.175"
+version = "0.1.176"
 dependencies = [
  "env_logger",
  "log",
@@ -1771,7 +1771,7 @@ dependencies = [
 
 [[package]]
 name = "rhiaqey-gateway-http"
-version = "0.1.175"
+version = "0.1.176"
 dependencies = [
  "axum 0.8.1",
  "axum-client-ip 0.7.0",
@@ -1791,7 +1791,7 @@ dependencies = [
 
 [[package]]
 name = "rhiaqey-gateway-ws"
-version = "0.1.175"
+version = "0.1.176"
 dependencies = [
  "axum 0.7.9",
  "axum-client-ip 0.6.1",
@@ -1811,7 +1811,7 @@ dependencies = [
 
 [[package]]
 name = "rhiaqey-gateways"
-version = "0.1.175"
+version = "0.1.176"
 dependencies = [
  "axum 0.8.1",
  "env_logger",
