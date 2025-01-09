@@ -152,7 +152,7 @@ async fn handle_ws_connection(socket: WebSocketConn, who: String, state: Arc<Web
                     }
                 },
                 Message::Binary(raw) => {
-                    match serde_json::from_slice::<GatewayMessage>(raw.as_slice()) {
+                    match serde_json::from_slice::<GatewayMessage>(raw.as_ref()) {
                         Ok(gateway_message) => {
                             debug!("gateway message arrived (text)");
                             sender
@@ -162,7 +162,7 @@ async fn handle_ws_connection(socket: WebSocketConn, who: String, state: Arc<Web
                         Err(error) => {
                             warn!(
                                 "error parsing gateway binary message: {error} - {}",
-                                String::from_utf8(raw).unwrap_or(String::from("[empty]"))
+                                String::from_utf8(raw.to_vec()).unwrap_or(String::from("[empty]"))
                             );
                         }
                     }
