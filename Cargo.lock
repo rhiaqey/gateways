@@ -311,9 +311,9 @@ checksum = "f61dac84819c6588b558454b194026eb1f09c293b9036ae9b159e74e73ab6cf9"
 
 [[package]]
 name = "cc"
-version = "1.2.13"
+version = "1.2.14"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c7777341816418c02e033934a09f20dc0ccaf65a5201ef8a450ae0105a573fda"
+checksum = "0c3d1b2e905a3a7b00a6141adb0e4c0bb941d11caf55349d863942a1cc44e3c9"
 dependencies = [
  "shlex",
 ]
@@ -509,9 +509,9 @@ dependencies = [
 
 [[package]]
 name = "equivalent"
-version = "1.0.1"
+version = "1.0.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5443807d6dff69373d433ab9ef5378ad8df50ca6298caf15de6e52e24aaf54d5"
+checksum = "877a4ace8713b0bcf2a4e7eec82529c029f1d0619886d18145fea96c3ffe5c0f"
 
 [[package]]
 name = "errno"
@@ -1234,9 +1234,9 @@ checksum = "c08d65885ee38876c4f86fa503fb49d7b507c2b62552df7c70b2fce627e06381"
 
 [[package]]
 name = "openssl"
-version = "0.10.70"
+version = "0.10.71"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "61cfb4e166a8bb8c9b55c500bc2308550148ece889be90f609377e58140f42c6"
+checksum = "5e14130c6a98cd258fdcb0fb6d744152343ff729cbfcb28c656a9d12b999fbcd"
 dependencies = [
  "bitflags",
  "cfg-if",
@@ -1269,9 +1269,9 @@ dependencies = [
 
 [[package]]
 name = "openssl-sys"
-version = "0.9.105"
+version = "0.9.106"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "8b22d5b84be05a8d6947c7cb71f7c849aa0f112acd4bf51c2a7c1c988ac0a9dc"
+checksum = "8bb61ea9811cc39e3c2069f40b8b8e2e70d8569b361f879786cc7ed48b777cdd"
 dependencies = [
  "cc",
  "libc",
@@ -1585,29 +1585,6 @@ dependencies = [
 
 [[package]]
 name = "redis"
-version = "0.28.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e37ec3fd44bea2ec947ba6cc7634d7999a6590aca7c35827c250bc0de502bda6"
-dependencies = [
- "arc-swap",
- "bytes",
- "combine",
- "futures-util",
- "itoa",
- "num-bigint",
- "percent-encoding",
- "pin-project-lite",
- "rand 0.8.5",
- "ryu",
- "sha1_smol",
- "socket2",
- "tokio",
- "tokio-util",
- "url",
-]
-
-[[package]]
-name = "redis"
 version = "0.29.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "9568894e8bdefd16512bca9e286a9d2abc27773609aa4eb7f428497d64df4373"
@@ -1670,7 +1647,7 @@ checksum = "2b15c43186be67a4fd63bee50d0303afffcef381492ebe2c5d87f324e1b8815c"
 [[package]]
 name = "rhiaqey-common"
 version = "0.2.1"
-source = "git+https://github.com/rhiaqey/common.git#72c1169d6df1224003b8a8cc02a511a2d4653026"
+source = "git+https://github.com/rhiaqey/common.git#64e93309d0312005eef3dc0eedbd1ef963b08784"
 dependencies = [
  "aes-gcm-siv",
  "anyhow",
@@ -1680,7 +1657,7 @@ dependencies = [
  "hyper",
  "log",
  "rand 0.8.5",
- "redis 0.28.2",
+ "redis",
  "rhiaqey-sdk-rs",
  "rmp-serde",
  "rsa",
@@ -1694,7 +1671,7 @@ dependencies = [
 
 [[package]]
 name = "rhiaqey-gateway-gtfs"
-version = "0.1.188"
+version = "0.1.189"
 dependencies = [
  "env_logger",
  "log",
@@ -1712,7 +1689,7 @@ dependencies = [
 
 [[package]]
 name = "rhiaqey-gateway-http"
-version = "0.1.188"
+version = "0.1.189"
 dependencies = [
  "axum",
  "axum-client-ip",
@@ -1732,7 +1709,7 @@ dependencies = [
 
 [[package]]
 name = "rhiaqey-gateway-ws"
-version = "0.1.188"
+version = "0.1.189"
 dependencies = [
  "axum",
  "axum-client-ip",
@@ -1752,7 +1729,7 @@ dependencies = [
 
 [[package]]
 name = "rhiaqey-gateways"
-version = "0.1.188"
+version = "0.1.189"
 dependencies = [
  "axum",
  "env_logger",
@@ -1762,7 +1739,7 @@ dependencies = [
  "log",
  "openssl",
  "prometheus",
- "redis 0.29.0",
+ "redis",
  "rhiaqey-common",
  "rhiaqey-gateway-gtfs",
  "rhiaqey-gateway-http",
@@ -2027,9 +2004,9 @@ dependencies = [
 
 [[package]]
 name = "smallvec"
-version = "1.13.2"
+version = "1.14.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3c5e1a9a646d36c3599cd173a41282daf47c44583ad367b8e6837255952e5c67"
+checksum = "7fcf8323ef1faaee30a44a340193b1ac6814fd9b7b4e88e9d4519a3e4abe1cfd"
 dependencies = [
  "serde",
 ]
@@ -2102,9 +2079,9 @@ dependencies = [
 
 [[package]]
 name = "tempfile"
-version = "3.16.0"
+version = "3.17.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "38c246215d7d24f48ae091a2902398798e05d978b24315d6efbc00ede9a8bb91"
+checksum = "22e5a0acb1f3f55f65cc4a866c361b2fb2a0ff6366785ae6fbb5f85df07ba230"
 dependencies = [
  "cfg-if",
  "fastrand",
@@ -2323,9 +2300,9 @@ dependencies = [
 
 [[package]]
 name = "typenum"
-version = "1.17.0"
+version = "1.18.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "42ff0bf0c66b8238c6f3b578df37d0b7848e55df8577b3f74f92a69acceeb825"
+checksum = "1dccffe3ce07af9386bfd29e80c0ab1a8205a2fc34e4bcd40364df902cfa8f3f"
 
 [[package]]
 name = "unicode-ident"
