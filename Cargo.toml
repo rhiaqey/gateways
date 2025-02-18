@@ -55,7 +55,7 @@ lazy_static = { workspace = true }
 prometheus = { workspace = true }
 futures = "0.3"
 rustis = { version = "0.13", features = ["redis-json", "tokio-runtime"] }
-redis = { version = "0.28", features = ["tokio-comp", "sentinel"] }
+redis = { version = "0.29", features = ["tokio-comp", "sentinel"] }
 axum = { version = "0.8", features = ["http2", "json", "macros",
     "original-uri", "tokio", "ws", "form", "query", "matched-path", "multipart"] }
 openssl = { version = "0.10", features = ["vendored"] }
