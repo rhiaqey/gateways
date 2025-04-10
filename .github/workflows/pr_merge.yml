@@ -19,7 +19,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Cargo install
-        uses: dimitrmo/cargo-verison-action@v1.0.25
+        uses: dimitrmo/cargo-verison-action@v1.0.26
         with:
           workspace: true
           skip-bump: true
@@ -67,7 +67,7 @@ jobs:
 
       - name: Cargo Verison
         id: verison
-        uses: dimitrmo/cargo-verison-action@v1.0.25
+        uses: dimitrmo/cargo-verison-action@v1.0.26
         with:
           workspace: true
           skip-install: true
@@ -83,7 +83,7 @@ jobs:
       # https://github.com/docker/metadata-action
       - name: Extract Docker metadata
         id: meta
-        uses: docker/metadata-action@369eb591f429131d6889c46b94e711f089e6ca96
+        uses: docker/metadata-action@902fa8ec7d6ecbf8d84d538b9b233a880e428804
         with:
           images: ${{ matrix.gateways.image }}
 
@@ -126,7 +126,7 @@ jobs:
 
       - name: Cargo Verison
         id: verison
-        uses: dimitrmo/cargo-verison-action@v1.0.25
+        uses: dimitrmo/cargo-verison-action@v1.0.26
         with:
           workspace: true
           skip-install: true
