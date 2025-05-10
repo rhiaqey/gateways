@@ -1649,8 +1649,8 @@ checksum = "2b15c43186be67a4fd63bee50d0303afffcef381492ebe2c5d87f324e1b8815c"
 
 [[package]]
 name = "rhiaqey-common"
-version = "0.2.1"
-source = "git+https://github.com/rhiaqey/common.git#4a0f784a0f774a4ec28042b2225bd8940b9163e9"
+version = "0.2.2"
+source = "git+https://github.com/rhiaqey/common.git#d97f618a9236a0b3cff66912e6a2de2a8a9b6650"
 dependencies = [
  "aes-gcm-siv",
  "anyhow",
@@ -1674,7 +1674,7 @@ dependencies = [
 
 [[package]]
 name = "rhiaqey-gateway-gtfs"
-version = "0.1.208"
+version = "0.1.209"
 dependencies = [
  "env_logger",
  "log",
@@ -1692,7 +1692,7 @@ dependencies = [
 
 [[package]]
 name = "rhiaqey-gateway-http"
-version = "0.1.208"
+version = "0.1.209"
 dependencies = [
  "axum",
  "axum-client-ip",
@@ -1712,7 +1712,7 @@ dependencies = [
 
 [[package]]
 name = "rhiaqey-gateway-ws"
-version = "0.1.208"
+version = "0.1.209"
 dependencies = [
  "axum",
  "axum-client-ip",
@@ -1732,7 +1732,7 @@ dependencies = [
 
 [[package]]
 name = "rhiaqey-gateways"
-version = "0.1.208"
+version = "0.1.209"
 dependencies = [
  "axum",
  "env_logger",
@@ -1756,8 +1756,8 @@ dependencies = [
 
 [[package]]
 name = "rhiaqey-sdk-rs"
-version = "0.1.1"
-source = "git+https://github.com/rhiaqey/sdk-rs.git#3add5e472ab87b31b5d4088c31b6f1aafbdbeb24"
+version = "0.1.2"
+source = "git+https://github.com/rhiaqey/sdk-rs.git#24a571c1eb140fb18b41dd268a60fa098d6e900f"
 dependencies = [
  "serde",
  "serde_bytes",
