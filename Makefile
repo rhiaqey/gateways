@@ -94,3 +94,7 @@ redisinsight:
 	docker run -it --rm --name redisinsight -p 5540:5540 \
 		--network host \
 		redis/redisinsight:${REDIS_INSIGHT_VERSION}
+
+.PHONY: all
+all:
+	cargo b --release --all-features

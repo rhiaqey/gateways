@@ -21,7 +21,8 @@
         "reqwest",
         "rhiaqey",
         "rustc",
-        "statx"
+        "statx",
+        "redisinsight"
     ],
     "ignoreWords": [],
     "import": []
