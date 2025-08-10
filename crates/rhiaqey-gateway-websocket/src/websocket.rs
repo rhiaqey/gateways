@@ -4,7 +4,7 @@ use axum::extract::WebSocketUpgrade;
 use axum::response::IntoResponse;
 use axum::routing::get;
 use axum::Router;
-use axum_client_ip::InsecureClientIp;
+use axum_client_ip::{ClientIp};
 use axum_extra::headers;
 use axum_extra::TypedHeader;
 use futures::StreamExt;
@@ -90,7 +90,7 @@ fn user_ip_allowed(ip: &str, allowed_ips: Vec<String>) -> bool {
 async fn ws_handler(
     ws: WebSocketUpgrade,
     // headers: HeaderMap,
-    insecure_ip: InsecureClientIp,
+    ClientIp(user_ip): ClientIp,
     user_agent: Option<TypedHeader<headers::UserAgent>>,
     State(state): State<Arc<WebSocketState>>,
 ) -> impl IntoResponse {
@@ -102,14 +102,14 @@ async fn ws_handler(
         String::from("Unknown browser")
     };
 
-    let ip = insecure_ip.0.to_string();
+    let ip = user_ip.to_string();
     debug!("`{}` at {} connected.", user_agent, ip);
 
     let statx = state.clone();
     let settings = statx.settings.lock().await;
     let whitelisted_ips = settings.whitelisted_ips.clone();
 
-    if !user_ip_allowed(&ip, whitelisted_ips) {
+    if !user_ip_allowed(ip.as_str(), whitelisted_ips) {
         return (StatusCode::FORBIDDEN, "Unauthorized access").into_response();
     }
 

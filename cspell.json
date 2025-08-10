@@ -22,7 +22,8 @@
         "rhiaqey",
         "rustc",
         "statx",
-        "redisinsight"
+        "redisinsight",
+        "pubsub"
     ],
     "ignoreWords": [],
     "import": []
