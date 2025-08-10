@@ -1,4 +1,4 @@
-FROM --platform=$BUILDPLATFORM rhiaqey/build:1.0.15 AS builder
+FROM --platform=$BUILDPLATFORM rhiaqey/build:1.0.17 AS builder
 
 ARG BINARY
 ARG FEATURES
@@ -22,7 +22,7 @@ RUN case "${TARGETPLATFORM}" in \
     && rustup target add ${rust_target} \
     && cargo install --target ${rust_target} --bin ${BINARY} --features ${BINARY} --path .
 
-FROM rhiaqey/run:1.0.12
+FROM rhiaqey/run:1.0.13
 
 ARG BINARY
 ARG USER=1000
@@ -37,9 +37,10 @@ ENV GROUP=$GROUP
 
 LABEL org.opencontainers.image.description="Rhiaqey Gateway ${BINARY}"
 
-# Create the specified group and user, and add the user to the group
-RUN groupadd -g $GROUP $GROUP \
-    && useradd -u $USER -ms /bin/bash -g $GROUP $USER
+# Create the specified group and user with the given GID/UID, avoid numeric names (Debian Trixie restriction)
+RUN set -eux; \
+    if ! getent group "$GROUP" >/dev/null; then groupadd -g "$GROUP" app; fi; \
+    if ! getent passwd "$USER" >/dev/null; then useradd -u "$USER" -ms /bin/bash -g "$GROUP" app; fi
 
 USER $USER
 
