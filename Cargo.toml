@@ -38,6 +38,7 @@ log = { version = "0.4" }
 hyper = { version = "1.6", features = ["full"] }
 lazy_static = { version = "1.5" }
 prometheus = { version = "0.14" }
+axum-client-ip = { version = "1.1" }
 
 [dependencies]
 rhiaqey-sdk-rs = { workspace = true }
@@ -51,6 +52,7 @@ log = { workspace = true }
 hyper = { workspace = true }
 lazy_static = { workspace = true }
 prometheus = { workspace = true }
+axum-client-ip = { workspace = true }
 futures = "0.3"
 axum = { version = "0.8", features = ["http2", "json", "macros",
     "original-uri", "tokio", "ws", "form", "query", "matched-path", "multipart"] }

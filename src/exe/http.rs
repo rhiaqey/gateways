@@ -4,6 +4,7 @@ use axum::{http::StatusCode, response::IntoResponse};
 use log::{debug, info};
 use prometheus::{Encoder, TextEncoder};
 use std::net::SocketAddr;
+use axum_client_ip::ClientIpSource;
 
 async fn get_ready() -> impl IntoResponse {
     StatusCode::OK
@@ -35,7 +36,8 @@ pub async fn start_private_http_server(port: u16) {
         .route("/alive", get(get_ready))
         .route("/ready", get(get_ready))
         .route("/metrics", get(get_metrics))
-        .route("/version", get(get_version));
+        .route("/version", get(get_version))
+        .layer(ClientIpSource::XRealIp.into_extension());
 
     let addr = SocketAddr::from(([0, 0, 0, 0], port));
     let listener = tokio::net::TcpListener::bind(&addr).await.unwrap();

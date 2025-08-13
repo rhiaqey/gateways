@@ -127,6 +127,7 @@ impl Gateway<HTTPSettings> for HTTP {
                 .route("/", get(get_home))
                 .route("/http", post(http_handler))
                 .route("/rest", post(http_handler))
+                .layer(ClientIpSource::XRealIp.into_extension())
                 .with_state(shared_state);
 
             let host = config.host.clone().unwrap_or(String::from("0.0.0.0"));

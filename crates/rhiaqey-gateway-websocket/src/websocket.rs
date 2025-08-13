@@ -4,7 +4,7 @@ use axum::extract::WebSocketUpgrade;
 use axum::response::IntoResponse;
 use axum::routing::get;
 use axum::Router;
-use axum_client_ip::{ClientIp};
+use axum_client_ip::{ClientIp, ClientIpSource};
 use axum_extra::headers;
 use axum_extra::TypedHeader;
 use futures::StreamExt;
@@ -232,6 +232,7 @@ impl Gateway<WebSocketSettings> for WebSocket {
                 .route("/", get(get_home))
                 .route("/ws", get(ws_handler))
                 .route("/websocket", get(ws_handler))
+                .layer(ClientIpSource::XRealIp.into_extension())
                 .with_state(shared_state);
 
             let host = config.host.clone().unwrap_or(String::from("0.0.0.0"));
