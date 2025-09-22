@@ -845,9 +845,9 @@ checksum = "df3b46402a9d5adb4c86a0cf463f42e19994e3ee891101b1841f30a545cb49a9"
 
 [[package]]
 name = "hybrid-array"
-version = "0.4.1"
+version = "0.4.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c7116c472cf19838450b1d421b4e842569f52b519d640aee9ace1ebcf5b21051"
+checksum = "4a09fa0190457fce307a699c050054974f81b6975b7a017f1e784eb7d9c2d4bc"
 dependencies = [
  "typenum",
 ]
@@ -1647,7 +1647,7 @@ dependencies = [
 
 [[package]]
 name = "rhiaqey-gateway-gtfs"
-version = "0.1.242"
+version = "0.1.243"
 dependencies = [
  "env_logger",
  "log",
@@ -1665,7 +1665,7 @@ dependencies = [
 
 [[package]]
 name = "rhiaqey-gateway-http"
-version = "0.1.242"
+version = "0.1.243"
 dependencies = [
  "axum",
  "axum-client-ip",
@@ -1685,7 +1685,7 @@ dependencies = [
 
 [[package]]
 name = "rhiaqey-gateway-ws"
-version = "0.1.242"
+version = "0.1.243"
 dependencies = [
  "axum",
  "axum-client-ip",
@@ -1705,7 +1705,7 @@ dependencies = [
 
 [[package]]
 name = "rhiaqey-gateways"
-version = "0.1.242"
+version = "0.1.243"
 dependencies = [
  "axum",
  "axum-client-ip",
