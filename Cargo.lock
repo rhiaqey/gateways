@@ -282,9 +282,9 @@ checksum = "d71b6127be86fdcfddb610f7182ac57211d4b18a3e9c82eb2d17662f2227ad6a"
 
 [[package]]
 name = "cfg-if"
-version = "1.0.3"
+version = "1.0.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "2fd1289c04a9ea8cb22300a459a72a385d7c73d3259e2ed7dcb2af674838cfa9"
+checksum = "9330f8b2ff13f34540b44e946ef35111825727b38d33286ef986142615121801"
 
 [[package]]
 name = "chacha20"
@@ -1579,7 +1579,7 @@ dependencies = [
 
 [[package]]
 name = "rhiaqey-gateway-gtfs"
-version = "0.1.247"
+version = "0.1.248"
 dependencies = [
  "env_logger",
  "log",
@@ -1597,7 +1597,7 @@ dependencies = [
 
 [[package]]
 name = "rhiaqey-gateway-http"
-version = "0.1.247"
+version = "0.1.248"
 dependencies = [
  "axum",
  "axum-client-ip",
@@ -1617,7 +1617,7 @@ dependencies = [
 
 [[package]]
 name = "rhiaqey-gateway-ws"
-version = "0.1.247"
+version = "0.1.248"
 dependencies = [
  "axum",
  "axum-client-ip",
@@ -1637,7 +1637,7 @@ dependencies = [
 
 [[package]]
 name = "rhiaqey-gateways"
-version = "0.1.247"
+version = "0.1.248"
 dependencies = [
  "axum",
  "axum-client-ip",
