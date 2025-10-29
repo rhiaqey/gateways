@@ -23,7 +23,8 @@
         "rustc",
         "statx",
         "redisinsight",
-        "pubsub"
+        "pubsub",
+        "aarch"
     ],
     "ignoreWords": [],
     "import": []
