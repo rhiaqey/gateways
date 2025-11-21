@@ -43,7 +43,7 @@ jobs:
         ]
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Install Protoc
         uses: arduino/setup-protoc@v3
@@ -108,7 +108,7 @@ jobs:
       - Publish
     steps:
       - name: Checkout
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - name: Git setup
         run: |
