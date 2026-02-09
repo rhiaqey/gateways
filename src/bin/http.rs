@@ -1,4 +1,4 @@
-use rhiaqey_gateway_http::http::{HTTPSettings, HTTP};
+use rhiaqey_gateway_http::http::{HTTP, HTTPSettings};
 
 #[tokio::main]
 async fn main() {

@@ -1,25 +1,25 @@
-use axum::extract::ws::{Message, WebSocket as WebSocketConn};
+use axum::Router;
 use axum::extract::State;
 use axum::extract::WebSocketUpgrade;
+use axum::extract::ws::{Message, WebSocket as WebSocketConn};
 use axum::response::IntoResponse;
 use axum::routing::get;
-use axum::Router;
 use axum_client_ip::{ClientIp, ClientIpSource};
-use axum_extra::headers;
 use axum_extra::TypedHeader;
+use axum_extra::headers;
 use futures::StreamExt;
 use hyper::http::StatusCode;
 use lazy_static::lazy_static;
 use log::{debug, info, warn};
-use prometheus::{register_int_gauge, IntGauge};
+use prometheus::{IntGauge, register_int_gauge};
 use rhiaqey_sdk_rs::gateway::{Gateway, GatewayConfig, GatewayMessage, GatewayMessageReceiver};
 use rhiaqey_sdk_rs::settings::Settings;
 use serde::{Deserialize, Serialize};
-use serde_json::{json, Value};
+use serde_json::{Value, json};
 use std::net::{IpAddr, SocketAddr};
 use std::sync::Arc;
-use tokio::sync::mpsc::{unbounded_channel, UnboundedSender};
 use tokio::sync::Mutex;
+use tokio::sync::mpsc::{UnboundedSender, unbounded_channel};
 
 lazy_static! {
     pub(crate) static ref TOTAL_CONNECTIONS: IntGauge = register_int_gauge!(

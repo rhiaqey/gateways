@@ -4,16 +4,16 @@ use axum::response::IntoResponse;
 use axum::routing::{get, post};
 use axum::{Json, Router};
 use axum_client_ip::{ClientIp, ClientIpSource};
-use axum_extra::{headers, TypedHeader};
+use axum_extra::{TypedHeader, headers};
 use log::{debug, info, warn};
 use rhiaqey_sdk_rs::gateway::{Gateway, GatewayConfig, GatewayMessage, GatewayMessageReceiver};
 use rhiaqey_sdk_rs::settings::Settings;
 use serde::{Deserialize, Serialize};
-use serde_json::{json, Value};
+use serde_json::{Value, json};
 use std::net::{IpAddr, SocketAddr};
 use std::sync::Arc;
-use tokio::sync::mpsc::{unbounded_channel, UnboundedSender};
 use tokio::sync::Mutex;
+use tokio::sync::mpsc::{UnboundedSender, unbounded_channel};
 
 #[derive(Default, Debug)]
 pub struct HTTP {

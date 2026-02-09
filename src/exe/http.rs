@@ -1,10 +1,10 @@
-use axum::routing::get;
 use axum::Router;
+use axum::routing::get;
 use axum::{http::StatusCode, response::IntoResponse};
+use axum_client_ip::ClientIpSource;
 use log::{debug, info};
 use prometheus::{Encoder, TextEncoder};
 use std::net::SocketAddr;
-use axum_client_ip::ClientIpSource;
 
 async fn get_ready() -> impl IntoResponse {
     StatusCode::OK
