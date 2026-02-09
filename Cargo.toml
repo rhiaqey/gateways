@@ -20,7 +20,7 @@ codegen-units = 1
 members = [
     "crates/rhiaqey-gateway-http",
     "crates/rhiaqey-gateway-gtfs",
-    "crates/rhiaqey-gateway-websocket"
+    "crates/rhiaqey-gateway-ws"
 ]
 
 [workspace.package]
@@ -38,14 +38,14 @@ log = { version = "0.4" }
 hyper = { version = "1.8", features = ["full"] }
 lazy_static = { version = "1.5" }
 prometheus = { version = "0.14" }
-axum-client-ip = { version = "1.1" }
+axum-client-ip = { version = "1.3" }
 
 [dependencies]
 rhiaqey-sdk-rs = { workspace = true }
 rhiaqey-common = { workspace = true }
 rhiaqey-gateway-http = { path = "crates/rhiaqey-gateway-http", optional = true }
 rhiaqey-gateway-gtfs = { path = "crates/rhiaqey-gateway-gtfs", optional = true }
-rhiaqey-gateway-ws = { path = "crates/rhiaqey-gateway-websocket", optional = true }
+rhiaqey-gateway-ws = { path = "crates/rhiaqey-gateway-ws", optional = true }
 tokio = { workspace = true }
 env_logger = { workspace = true }
 log = { workspace = true }
