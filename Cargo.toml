@@ -53,8 +53,8 @@ hyper = { workspace = true }
 lazy_static = { workspace = true }
 prometheus = { workspace = true }
 axum-client-ip = { workspace = true }
-futures = "0.3"
-axum = { version = "0.8", features = ["http2", "json", "macros",
+futures = "0.3.32"
+axum = { version = "0.8.9", features = ["http2", "json", "macros",
     "original-uri", "tokio", "ws", "form", "query", "matched-path", "multipart"] }
 
 [features]
