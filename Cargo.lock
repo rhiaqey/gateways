@@ -1697,7 +1697,7 @@ checksum = "d6f6ff9a378485b298a5286656da665ba74413d36db0979633275d2e708145d4"
 [[package]]
 name = "rhiaqey-common"
 version = "0.3.0"
-source = "git+https://github.com/rhiaqey/common.git#8469b36fca1f9c55841821369d8bfed340ae4e3f"
+source = "git+https://github.com/rhiaqey/common.git#319b1337a5fbb3e5742ce20964e2e970e1dd338b"
 dependencies = [
  "aes-gcm-siv",
  "anyhow",
