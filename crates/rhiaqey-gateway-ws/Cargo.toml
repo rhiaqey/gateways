@@ -20,7 +20,7 @@ env_logger = { workspace = true }
 log = { workspace = true }
 hyper = { workspace = true }
 lazy_static = { workspace = true }
-futures = { version = "0.3.32" }
+futures = { version = "0.3.33" }
 prometheus = { workspace = true }
 axum = { version = "0.8.9", features = ["http2", "json", "macros",
     "original-uri", "tokio", "ws", "form", "query", "matched-path", "multipart"] }
