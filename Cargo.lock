@@ -1688,7 +1688,7 @@ dependencies = [
 
 [[package]]
 name = "rhiaqey-gateway-gtfs"
-version = "0.1.288"
+version = "0.1.289"
 dependencies = [
  "env_logger",
  "log",
@@ -1706,7 +1706,7 @@ dependencies = [
 
 [[package]]
 name = "rhiaqey-gateway-http"
-version = "0.1.288"
+version = "0.1.289"
 dependencies = [
  "axum",
  "axum-client-ip",
@@ -1726,7 +1726,7 @@ dependencies = [
 
 [[package]]
 name = "rhiaqey-gateway-ws"
-version = "0.1.288"
+version = "0.1.289"
 dependencies = [
  "axum",
  "axum-client-ip",
@@ -1746,7 +1746,7 @@ dependencies = [
 
 [[package]]
 name = "rhiaqey-gateways"
-version = "0.1.288"
+version = "0.1.289"
 dependencies = [
  "axum",
  "axum-client-ip",
