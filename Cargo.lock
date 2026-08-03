@@ -410,6 +410,21 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "338089f42c427b86394a5ee60ff321da23a5c89c9d89514c829687b26359fcff"
 
 [[package]]
+name = "crossbeam-queue"
+version = "0.3.13"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "803d13fb3b09d88be9f4dbc29062c66b19bf7170867ceb746d2a8689bf6c7a26"
+dependencies = [
+ "crossbeam-utils",
+]
+
+[[package]]
+name = "crossbeam-utils"
+version = "0.8.22"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "61803da095bee82a81bb1a452ecc25d3b2f1416d1897eb86430c6159ef717c17"
+
+[[package]]
 name = "crypto-bigint"
 version = "0.7.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1651,7 +1666,7 @@ checksum = "d6f6ff9a378485b298a5286656da665ba74413d36db0979633275d2e708145d4"
 [[package]]
 name = "rhiaqey-common"
 version = "0.3.0"
-source = "git+https://github.com/rhiaqey/common.git#63d9ca411936e44ad8dbb64fc88736556d2f66d2"
+source = "git+https://github.com/rhiaqey/common.git#04c0303784472125af6c659d1f703139b586abe5"
 dependencies = [
  "aes-gcm-siv",
  "anyhow",
@@ -1797,13 +1812,14 @@ dependencies = [
 
 [[package]]
 name = "rustis"
-version = "0.20.0"
+version = "0.21.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "53382f0de1df2f36bea83c43372ffc24eed58fdf94b36e0272f57721c09869cc"
+checksum = "af35730c168e84b2e792c67898f4d7c967bda27dbd22a2cae37f45e0207bb046"
 dependencies = [
  "atoi",
  "bytes",
  "crc16",
+ "crossbeam-queue",
  "dtoa",
  "fast-float2",
  "futures-channel",
