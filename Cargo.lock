@@ -1666,7 +1666,7 @@ checksum = "d6f6ff9a378485b298a5286656da665ba74413d36db0979633275d2e708145d4"
 [[package]]
 name = "rhiaqey-common"
 version = "0.3.0"
-source = "git+https://github.com/rhiaqey/common.git#487222a7fce932e4535f2a4d437540bfb323d0cd"
+source = "git+https://github.com/rhiaqey/common.git#1e0011e9467d3bfed55600dd94b62d183b2f7171"
 dependencies = [
  "aes-gcm-siv",
  "anyhow",
@@ -1812,9 +1812,9 @@ dependencies = [
 
 [[package]]
 name = "rustis"
-version = "0.22.0"
+version = "0.23.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "c6e00d2a4bab4b9d18f5f8729582d1e48076730c7827312abba20dee40663374"
+checksum = "0aea9aa4c4bbcce0b863b5f56aba1d7cf964965e7a4bb2224b3d8971061c8a23"
 dependencies = [
  "atoi",
  "bytes",
@@ -1826,6 +1826,7 @@ dependencies = [
  "futures-util",
  "itoa",
  "memchr",
+ "pin-project-lite",
  "rand 0.10.2",
  "serde",
  "smallvec",
